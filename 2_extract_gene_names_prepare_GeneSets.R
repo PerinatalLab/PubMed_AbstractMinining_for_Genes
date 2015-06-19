@@ -235,13 +235,13 @@ venn(temp); rm(temp)
 
 # ELIMINATE GENES (from the genes_1 set) THAT ARE EASILY CONFUSED WITH THE TERMS FROM OBSTETRIC FIELD
 # define dangerous gene names that are also biomed acronyms
-restricted_acronyms = unique(c( "AGA","SGA","LGA","FGR","AFD","ART","DMP","GO","IUGR","FGR","MC","DC","ECM",
-                                "SPTB","PTL","WAS","FTL","BPD","RDS","PTD","PTB","PROM","PPROM","PTL","CPHD",
+restricted_acronyms = unique(c( "AGA","SGA","LGA","FGR","AFD","ART","DMP","GO","IUGR","FGR","MC","DC","ECM","CDG",
+                                "SPTB","PTL","WAS","FTL","BPD","RDS","PTD","PTB","PROM","PPROM","PTL","CPHD","IAI",
                                 "NDN","TSL","POR","CAT","RAT","PIG","CATS", "MSC","PAH","PLEC","PIH","IVF","HRT",
                                 "CI","OR","RR","CC","SNP","MDR","RNA","DNA","ISCI","LOD","CAD","PGP","ROC","CPE",
-                                "MRI","CSM","HIV","HPV", "SDS","PAGE","SAGE", "FIGO", "ADO","PCR","QPCR","IVH",
+                                "MRI","CSM","HIV","HPV", "SDS","PAGE","SAGE", "FIGO", "ADO","PCR","QPCR","IVH","OI",
                                 "ROP","OS","RDS","BPD","ROP","AIM","THE", "PGD","ADO","SDS","PLEC","HUVEC","ERA",
-                                "SPARC","FOR","THE","BCM","HEEC","MSC","LNG","AMP","CERTL","DDT","ANOVA","COCP",
+                                "SPARC","FOR","THE","BCM","HEEC","MSC","LNG","AMP","CERTL","DDT","ANOVA","COCP","MIAC",
                                 "BAD","PRL","PGF","TERT","CAC","CTC","TTC","ISH","ECS","ESC","MPA","CGB","CGA","EVT"))
 # congenital disorder of glycosylation (CDG)
 #IAI - intraamniotic infection
