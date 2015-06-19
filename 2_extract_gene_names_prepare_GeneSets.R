@@ -85,7 +85,7 @@ for (phe in phes) {
         # get rid of tab symbol in the begining of the text string
         for (i in 1:length(raw.txt)) raw.txt[i] = unlist(strsplit(raw.txt[i],"\t"))[2]
         
-        # optional stage:
+        # optional stage ("exclusivity pruning")
         #####################################################################################
         ####  get rid of abstracts that contain a keyword from other phenotypes/tissues/keywords
         
@@ -96,7 +96,7 @@ for (phe in phes) {
         if (phe=="PLACENTA") regexp_not="endometr|myometr|([[:punct:]]|\\s)+cervi|([[:punct:]]|\\s)+uter[uaoi]+"
         print(regexp_not)
         
-        bad = grep(regexp_not,raw.txt)
+        bad = grep(regexp_not,raw.txt,ignore.case = T)
         raw.txt = raw.txt[-bad]
         print(paste("number of abstacts (after exclusivity pruning): ",length(raw.txt),sep=""))
         
