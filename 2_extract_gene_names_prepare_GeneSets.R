@@ -35,7 +35,7 @@ diseases2 = tolower(diseases1) # "ignore-case" option in grep will be used anywa
 diseases = sort(unique(diseases2))
 length(diseases)
 #table(nchar(diseases))
-#diseases[which(nchar(diseases)<5)]
+#diseases[which(nchar(diseases)<6)]
 
 ##  get the list of animal-related terms that should not be in the abstracts (non-human subjects)
 anim1 = read.table("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/animal_name_indicators.txt",
@@ -75,11 +75,11 @@ collection2= NULL  # for those with minimum 2 abstracts mentioning the gene name
 for (phe in phes) {
         print(phe)
         file_name = files_ok[which(pheno==phe)]
-        raw.txt=readLines(paste(PubMedDir,file_name,sep="")) ; length(raw.txt)
+        raw.txt=readLines(paste(PubMedDir,file_name,sep=""))
+        print(paste("number of abstacts (initial): ",length(raw.txt),sep=""))
         
         # get rid of tab symbol in the begining of the text string
         for (i in 1:length(raw.txt)) raw.txt[i] = unlist(strsplit(raw.txt[i],"\t"))[2]
-        
         
         # optional stage:
         #####################################################################################
@@ -90,9 +90,11 @@ for (phe in phes) {
         if (phe=="UTERUS") regexp_not="endometr|myometr|([[:punct:]]|\\s)+cervi|placent"
         if (phe=="CERVIX") regexp_not="endometr|myometr|([[:punct:]]|\\s)+uter[uaoi]+|placent"
         if (phe=="PLACENTA") regexp_not="endometr|myometr|([[:punct:]]|\\s)+cervi|([[:punct:]]|\\s)+uter[uaoi]+"
+        print(regexp_not)
         
         bad = grep(regexp_not,raw.txt)
         raw.txt = raw.txt[-bad]
+        print(paste("number of abstacts (after exclusivity pruning): ",length(raw.txt),sep=""))
         
         #####################################################################################
         ####  get rid of abstracts that contain other restricted code words
@@ -105,8 +107,7 @@ for (phe in phes) {
         
         bad.lines=unique(c(bad.lines3,bad.lines4,bad.lines5,bad.lines6)); length(bad.lines)
         raw.txt=raw.txt[-bad.lines]
-        ntexts=length(raw.txt)
-        print(ntexts)
+        print(paste("number of abstacts (after pop disease pruning): ",length(raw.txt),sep=""))
         
         #####################################################################################
         ####  get rid of abstracts that are not realistically important and might contain biases (ANIMAL studies)
@@ -119,7 +120,7 @@ for (phe in phes) {
         animal_regexp = paste("([[:punct:]]|\\s)+",animals,"([[:punct:]]|\\s)+",sep="")
         head(animal_regexp)
         for (i in 1:n_abstracts) {   # takes about a minute (per thousand abstracts)
-                print(paste(i,"/",n_abstracts,sep=""))
+                #print(paste(i,"/",n_abstracts,sep=""))
                 tst = NULL
                 for (j in 1:n_animals) {
                         tst=c(tst, length(grep(animal_regexp[j],raw.txt[i],ignore.case = T))>0)
@@ -129,13 +130,13 @@ for (phe in phes) {
                 rm(tst)
         }
         
-        table(animal_test)
-        sort(unique(unlist(lst)))
+        #table(animal_test)
+        #sort(unique(unlist(lst)))
         
         # clean-up
         #raw.txt[which(animal_test)]
         raw.txt=raw.txt[-which(animal_test)]
-             
+        print(paste("number of abstacts (after animal pruning): ",length(raw.txt),sep=""))
         
         #####################################################################################
         ####  get rid of abstracts that contain forbiden medical terms (medical conditions)        
@@ -147,7 +148,7 @@ for (phe in phes) {
         diseases_regexp = paste("([[:punct:]]|\\s)+",diseases,"([[:punct:]]|\\s)+",sep="")
         head(diseases_regexp)
         for (i in 1:n_abstracts) {   # takes about a minute (per thousand abstracts)
-                print(paste(i,"/",n_abstracts,sep=""))
+                #print(paste(i,"/",n_abstracts,sep=""))
                 tst = NULL
                 for (j in 1:n_diseases) {
                         
@@ -157,12 +158,12 @@ for (phe in phes) {
                 lst[[i]]=diseases[which(tst)]
         }
         
-        table(disease_test)
-        sort(unique(unlist(lst)))
+        #table(disease_test)
+        #sort(unique(unlist(lst)))
         
         # clean-up
         raw.txt=raw.txt[-which(disease_test)]
-        
+        print(paste("number of abstacts (after rare disease pruning): ",length(raw.txt),sep=""))
         
         # note that  "retractions" are taken care of in previous text mining script (by Julius)
 
@@ -173,8 +174,7 @@ for (phe in phes) {
         from_length = nchar(translator$from)
         translator = translator[order(from_length,decreasing = T),]
         #head(translator); rm(from_length)
-        
-        
+
         # IF YOU DO NOT WANT TO USE TRANSLATOR - activate the following line:
         #translator = data.frame(from="111111",to="222222")
 
