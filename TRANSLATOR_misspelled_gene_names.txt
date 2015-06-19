@@ -1,0 +1,338 @@
+######   manually created by Jonas to preserve some potentially important genes 
+###  Potential problems: two-letter genes (like Progesterone Receptor)### longer names e.g., "IL-18 receptor" should be changed BEFORE IL-18### TNF-beta is erroneously assigned to TNF gene### no gene match was found:   catenin-D2###Delta4Tib###elsolin###epidermal growth factor-like growth factor###NAG-1 .....##Glycodelin##glycodelin##tropomyosin binding protein##TIL-4
+from	toperoxisome proliferator-activated receptor-gamma	PPARG
+tissue inhibitor of metalloproteinase 1	TIMP1
+microsomal glutathione S-transferase 1	MGST1
+hydroxyprostaglandin dehydrogenase 15	HPGD
+hydroxysteroid 11beta-dehydrogenase 1	HSD11B1
+phosphatidic acid phosphatase type 2B	PPAP2B
+TNF-related apoptosis-inducing ligand	TNFSF10
+insulin-like growth factor receptor	IGF1R
+chloramphenicol acetyl transferase	CAT 
+discoidin domain receptor member 2	DDR2
+death-associated protein kinase 1	DAPK1
+Plasminogen activator inhibitor-1	SERPINE1
+plasminogen activator inhibitor-1	SERPINE1
+plasminogen activator inhibitor-2	SERPINB2
+Plasminogen activator inhibitor-2	SERPINB2
+secretoglobin family 2A, member 2	SCGB2A2
+angiotensin II receptor, type II	AGTR2
+transforming growth factor beta2	TGFB2
+angiotensin II receptor, type 1	AGTR1
+angiotensin II receptor, type 2	AGTR2
+angiotensin II receptor, type I	AGTR1
+gonadotrophin-releasing hormone	GNRH1
+plasminogen activator inhibitor	SERPINE1
+fumarylacetoacetate hydrolase	FAH
+insulin-like growth factor II	IGF2
+insulin-like growth factor 1	IGF1
+insulin-like growth factor 2	IGF2
+insulin-like growth factor I	IGF1
+calmodulin binding protein	FABP1
+prostaglandin E synthase 2	PTGES2
+aldehyde dehydrogenase 1	ALDH1A3
+alpha1 type XVI collagen	COL16A1
+epithelial growth factor	EGF
+prostaglandin E synthase	PTGES
+prostaglandin F receptor	PTGFR
+chorionic gonadotrophin	CGA
+estrogen receptor alpha	ESR1
+Estrogen receptor alpha	ESR1
+estrogen receptor-alpha	ESR1
+Estrogen receptor-alpha	ESR1
+frizzle-related protein	SFRP2
+nitric oxide synthase 1	NOS1
+nitric oxide synthase 2	NOS2
+nitric oxide synthase 3	NOS3
+collagen alpha2 type I	COL1A2
+estrogen receptor beta	ESR2
+Estrogen receptor beta	ESR2
+estrogen receptor-beta	ESR2
+Estrogen receptor-beta	ESR2
+IL-6 signal transducer	IL6ST
+l-kynurenine hydrolase	KYNU
+actin binding protein	ABP
+bile salt export pump	ABCB11
+histone deacetylase 5	HDAC5
+IL-13 receptor alpha1	IL13RA1
+IL-13 receptor alpha2	IL13RA2
+nitric oxide synthase	NOS1
+progesterone receptor	PGR
+metalloproteinase 26	MMP26
+metalloproteinase-26	MMP26
+estrogen receptor 1	ESR1
+Estrogen receptor 1	ESR1
+estrogen receptor 2	ESR2
+Estrogen receptor 2	ESR2
+IGF-binding protein	IGFBP3
+metalloproteinase 4	MMP4
+metalloproteinase 7	MMP7
+metalloproteinase-4	MMP4
+metalloproteinase-7	MMP7
+type I TNF receptor	TNFR1
+metallothionein 2A	MT2A
+estrogen receptor	ESR1
+oxytocin receptor	OXTR
+cyclooxygenase-2	PTGS2
+insulin receptor	INSR
+(IL)-1 receptor	IL1R1
+IGF-1 receptor	IGF1R
+IL-10 receptor	IL10RA
+IL-11 receptor	IL11RA
+IL-12 receptor	IL12RB1
+IL-13 receptor	IL13RA1
+IL-15 receptor	IL15RA
+IL-18 receptor	IL18R1
+lipocortin III	ANXA3
+collagen-11A1	COL11A1
+IL-1 receptor	IL1R1
+IL-2 receptor	IL2RA
+IL-4 receptor	IL4R
+IL-6 receptor	IL6R
+IL-8 receptor	IL8RA
+inhibin alpha	INHA
+mammaglobin A	SCGB2A2
+mammaglobin-A	SCGB2A2
+FSH receptor	FSHR
+inhibin beta	INHBA
+kynureninase	KYNU
+lipocortin I	ANXA1
+connexin-37	GJA4
+flotillin-1	FLOT1
+GADD45gamma	GADD45G
+P45017alpha	CYP17A1
+TGF-beta(2)	TGFB2
+annexin A1	ANXA1
+annexin A3	ANXA3
+cPLA2alpha	PLA2G4A
+CYP11alpha	CYP11A
+HIF-1alpha	HIF1A
+HIF-2alpha	EPAS1
+HIF1-alpha	HIF1A
+MIP-3alpha	CCL20
+PPAR-gamma	PPARG
+17betaHSD	HSD17B1
+ACC-alpha	ACACA
+AP-2alpha	notSureWhatGene
+AP-2gamma	notSureWhatGene
+aromatase	CYP19A1
+C4BPalpha	C4BPA
+caspase 6	CASP6
+cyclin B1	CCNB1
+cyclin B2	CCNB2
+cyclin B3	CCNB3
+cyclin E1	CCNE1
+cyclin E2	CCNE2
+EGR-alpha	EGR1
+ESR-alpha	ESR1
+fibulin-1	FBLN1
+fibulin-2	FBLN2
+GSK-3beta	GSK3B
+HIF1alpha	HIF1A
+HNF4alpha	HNF4A
+HSD17beta	notSureWhatGene
+IFN-alpha	IFNA1
+IFN-gamma	IFNG
+IL-1alpha	IL1A
+INF-gamma	IFNG
+MIP-1beta	CCL4
+NF-kappaB	NFKB1
+PGF2alpha	notSureWhatGene
+PPARgamma	PPARG
+prolactin	PRL
+RAR-2beta	RARB
+relaxin 1	RLN1
+relaxin 2	RLN2
+TGF-alpha	TGFA
+TNF-alpha	TNF
+cyclin B	CCNB1
+ER alpha	ESR1
+ER-alpha	ESR1
+ESR-beta	ESR2
+GRO-beta	CXCL2
+HNF1beta	HNF1B
+IFNgamma	IFNG
+IKK-beta	IKBKB
+IKKalpha	CHUK
+IL-1beta	IL1B
+perforin	PRF1
+RAR-beta	RARB
+RARalpha	RARA
+RXRalpha	RXRA
+TFF1/pS2	TFF1
+TGF-beta	TGFB1
+TGFalpha	TGFA
+TGFbeta1	TGFB1
+TNF-beta	TNF
+TNFalpha	TNF
+(COX)-2	PTGS2
+activin	INHBA
+decorin	DCN
+EBPbeta	CEBPB
+ER beta	ESR2
+ER-beta	ESR2
+ERalpha	ESR1
+GRalpha	NR3C1
+IGF-IIR	IGF2R
+IGFBP-1	IGFBP1
+IGFBP-3	IGFBP3
+IGFBP-5	IGFBP5
+IIalpha	notSureWhatGene
+IKKbeta	IKBKB
+IL1beta	IL1B
+LH-beta	LHB
+mucin-9	MUC9
+RARbeta	RARB
+Relaxin	RLN1
+RSVbeta	nongene
+SA-beta	SABG
+TFGbeta	notSureWhatGene
+TGFbeta	TGFB1
+TNFbeta	TNF
+TPalpha	TBXA2R
+(IL)-10	IL10
+(IL)-11	IL11
+(IL)-12	IL12
+(IL)-13	IL13
+(IL)-14	IL14
+(IL)-15	IL15
+(IL)-16	IL16
+(IL)-17	IL17
+(IL)-18	IL18
+(IL)-19	IL19
+(IL)-20	IL20
+(IL)-21	IL21
+(IL)-22	IL22
+(IL)-23	IL23
+(IL)-24	IL24
+(IL)-25	IL25
+(IL)-26	IL26
+(IL)-27	IL27
+(IL)-28	IL28
+(IL)-29	IL29
+(IL)-30	IL30
+(IL)-31	IL31
+(IL)-32	IL32
+(IL)-33	IL33
+(IL)-34	IL34
+(IL)-35	IL35
+(IL)-36	IL36
+(IL)-37	IL37
+CGbeta	CGB
+ERbeta	ESR2
+IGF-II	IGF2
+IGF-IR	IGF1R
+MMP-10	MMP10
+MMP-11	MMP11
+MMP-26	MP26
+TIMP-1	TIMP1
+TIMP-2	TIMP2
+TIMP-3	TIMP3
+TIMP-4	TIMP4
+TPbeta	TBXA2R
+(IL)-1	IL1
+(IL)-2	IL2
+(IL)-3	IL3
+(IL)-4	IL4
+(IL)-5	IL5
+(IL)-6	IL6
+(IL)-7	IL7
+(IL)-8	IL8
+(IL)-9	IL9
+bcl-2	BCL2
+bcl-x	BCL2L1
+c-MYC	MYC
+COX-2	PTGS2
+DKK-1	DKK1
+IGF-1	IGF1
+IGF-2	IGF2
+IGF-I	IGF1
+IL-10	IL10
+IL-11	IL11
+IL-12	IL12
+IL-15	IL15
+IL-18	IL18
+IL-1b	IL1B
+MMP-1	MMP1
+MMP-3	MMP3
+MMP-7	MMP7
+MMP-8	MMP8
+PAI-1	SERPINE1
+PAI-2	SERPINB2
+IL-13	IL13
+IL-14	IL14
+IL-16	IL16
+IL-17	IL17
+IL-19	IL19
+IL-20	IL20
+IL-21	IL21
+IL-22	IL22
+IL-23	IL23
+IL-24	IL24
+IL-25	IL25
+IL-26	IL26
+IL-27	IL27
+IL-28	IL28
+IL-29	IL29
+IL-30	IL30
+IL-31	IL31
+IL-32	IL32
+IL-33	IL33
+IL-34	IL34
+IL-35	IL35
+IL-36	IL36
+IL-37	IL37
+IL 10	IL10
+IL 11	IL11
+IL 12	IL12
+IL 13	IL13
+IL 14	IL14
+IL 15	IL15
+IL 16	IL16
+IL 17	IL17
+IL 18	IL18
+IL 19	IL19
+IL 20	IL20
+IL 21	IL21
+IL 22	IL22
+IL 23	IL23
+IL 24	IL24
+IL 25	IL25
+IL 26	IL26
+IL 27	IL27
+IL 28	IL28
+IL 29	IL29
+IL 30	IL30
+IL 31	IL31
+IL 32	IL32
+IL 33	IL33
+IL 34	IL34
+IL 35	IL35
+IL 36	IL36
+IL 37	IL37
+bFGF	FGF2
+FasL	FASLG
+GnRH	GNRH1
+IL-1	IL1
+IL-2	IL2
+IL-4	IL4
+IL-6	IL6
+IL-8	IL8
+WISP	WISP1
+IL-3	IL3
+IL-5	IL5
+IL-7	IL7
+IL-9	IL9
+IL 1	IL1
+IL 2	IL2
+IL 3	IL3
+IL 4	IL4
+IL 5	IL5
+IL 6	IL6
+IL 7	IL7
+IL 8	IL8
+IL 9	IL9
+bax	BCL2
+ERa	ESR1
+ERb	ESR2
+Fas	FAS
