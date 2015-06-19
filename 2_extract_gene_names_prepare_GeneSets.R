@@ -47,8 +47,8 @@ animals=sort(unique(c(anim1,anim2)))
 
 
 PubMedDir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_DIGEST/"
-file_list = list.files(PubMedDir,pattern="PLACEN|CERVIX|MYOMETR|ENDOMETR|UTER")  # pregnancy-related genes
-#file_list = list.files(PubMedDir,pattern="PENILE|BLADD|BONE|DENTAL|PROSTAT|TRACHE")  # control set of genes (other tissues)
+#file_list = list.files(PubMedDir,pattern="PLACEN|CERVIX|MYOMETR|ENDOMETR|UTER")  # pregnancy-related genes  ***
+file_list = list.files(PubMedDir,pattern="PENILE|BLADD|BONE|DENTAL|PROSTAT|TRACHE")  # control set of genes (other tissues) ***
 files_ok = file_list[grep("abstracts",file_list)]
 pheno=NULL; for (i in 1:length(files_ok))pheno = c(pheno, unlist(strsplit(files_ok[i],"_"))[4]); print(pheno)
 
@@ -89,15 +89,25 @@ for (phe in phes) {
         #####################################################################################
         ####  get rid of abstracts that contain a keyword from other phenotypes/tissues/keywords
         
+        # for pregnancy-related genes
         if (phe=="ENDOMETRIUM") regexp_not="myometr|([[:punct:]]|\\s)+cervi|([[:punct:]]|\\s)+uter[uaoi]+|placent"
         if (phe=="MYOMETRIUM") regexp_not="endometr|([[:punct:]]|\\s)+cervi|([[:punct:]]|\\s)+uter[uaoi]+|placent"
         if (phe=="UTERUS") regexp_not="endometr|myometr|([[:punct:]]|\\s)+cervi|placent"
         if (phe=="CERVIX") regexp_not="endometr|myometr|([[:punct:]]|\\s)+uter[uaoi]+|placent"
         if (phe=="PLACENTA") regexp_not="endometr|myometr|([[:punct:]]|\\s)+cervi|([[:punct:]]|\\s)+uter[uaoi]+"
+        
+        # for a control set of genes
+        if (phe=="BLADDER") regexp_not="([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|([[:punct:]]|\\s)+dent|penile|prostat|trachea[ao]"
+        if (phe=="BONE") regexp_not="bladder|([[:punct:]]|\\s)+dent|penile|prostat|trachea[ao]"
+        if (phe=="DENTAL") regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|penile|prostat|trachea[ao]"
+        if (phe=="PENILE") regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|([[:punct:]]|\\s)+dent|prostat|trachea[ao]"
+        if (phe=="PROSTATE") regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|([[:punct:]]|\\s)+dent|penile|trachea[ao]"
+        if (phe=="TRACHEA") regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|([[:punct:]]|\\s)+dent|penile|prostat"
         print(regexp_not)
         
-#        bad = grep(regexp_not,raw.txt,ignore.case = T)
-#        raw.txt = raw.txt[-bad]
+        ## decide now whether ou want to use exclusivity filter or not
+#        bad = grep(regexp_not,raw.txt,ignore.case = T)  # ***
+#        raw.txt = raw.txt[-bad]    #                           ****
         print(paste("number of abstacts (after exclusivity pruning): ",length(raw.txt),sep=""))
         
         #####################################################################################
@@ -179,8 +189,8 @@ for (phe in phes) {
         translator = translator[order(from_length,decreasing = T),]
         #head(translator); rm(from_length)
 
-        # IF YOU DO NOT WANT TO USE TRANSLATOR - activate the following line:
-        translator = data.frame(from="111111",to="222222")
+        # DECIDE IF YOU DO NOT WANT TO USE TRANSLATOR - activate the following line:  
+        #translator = data.frame(from="111111",to="222222")   #  ***
 
 cumm1=NULL  # cummulation of potential gene names extracted from abstracts
 cumm2=NULL  # cummulation of REAL gene names extracted from abstracts using TRANSLATOR
