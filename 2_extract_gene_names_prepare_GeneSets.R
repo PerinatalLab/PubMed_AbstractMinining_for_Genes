@@ -106,8 +106,8 @@ for (phe in phes) {
         print(regexp_not)
         
         ## decide now whether ou want to use exclusivity filter or not
-#        bad = grep(regexp_not,raw.txt,ignore.case = T)  # ***
-#        raw.txt = raw.txt[-bad]    #                           ****
+        bad = grep(regexp_not,raw.txt,ignore.case = T)  # ***
+        raw.txt = raw.txt[-bad]    #                           ****
         print(paste("number of abstacts (after exclusivity pruning): ",length(raw.txt),sep=""))
         
         #####################################################################################
@@ -296,14 +296,18 @@ rm(gene.freq, genes, genes_1,genes_2, cumm1,cumm2,p1,p2)
 #####   save the results
 obg_xcl_trn = gene_lists  # obg = OBGYN, xcl = exclusivity filter, trn = with TRANSLATOR
 obg_xcl_unt = gene_lists  # obg = OBGYN, xcl = exclusivity filter, unt = no TRANSLATOR
-obg_nxc_trn = gene_lists  # obg = OBGYN, nxc = no exclusivity filter, unt = with TRANSLATOR
+obg_nxc_trn = gene_lists  # obg = OBGYN, nxc = no exclusivity filter, trn = with TRANSLATOR
 obg_nxc_unt = gene_lists  # obg = OBGYN, nxc = no exclusivity filter, unt = no TRANSLATOR
-
-
 save(list=c("obg_xcl_trn","obg_xcl_unt","obg_nxc_trn","obg_nxc_unt"),
      file="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/obgyn_genes.RData")
      
-     
+ctrl_nxc_trn = gene_lists  # ctrl = CONTRAL, xcl = exclusivity filter, trn = with TRANSLATOR
+ctrl_xcl_trn = gene_lists  # ctrl = CONTRAL, nxc = no exclusivity filter, trn = with TRANSLATOR
+save(list=c("ctrl_nxc_trn","ctrl_xcl_trn"),
+     file="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/cntrl_genes.RData")
+
+
+
 ###########   PREVIEW
 temp=list(endom.=gene_lists$ENDOMETRIUM$gene,myom.=gene_lists$MYOMETRIUM$gene,
           cervix = gene_lists$CERVIX$gene,uterus = gene_lists$UTERUS$gene,
@@ -312,10 +316,11 @@ venn(temp)
 
 
 # for control-set of tissues/phenotypes
-temp=list(bladd=gene_lists$BLADDER$gene,bone=gene_lists$BONE$gene,
-          penile = gene_lists$PENILE$gene,prost = gene_lists$PROSTATE$gene,
-          trach = gene_lists$TRACHEA$gene)
+temp=list(bladder = gene_lists$BLADDER$gene,bone=gene_lists$BONE$gene,
+          penile = gene_lists$PENILE$gene,prostate = gene_lists$PROSTATE$gene,
+          trachea = gene_lists$TRACHEA$gene)
 venn(temp)
+
 
 
 
