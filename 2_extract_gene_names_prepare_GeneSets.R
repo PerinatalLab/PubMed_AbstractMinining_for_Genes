@@ -96,8 +96,8 @@ for (phe in phes) {
         if (phe=="PLACENTA") regexp_not="endometr|myometr|([[:punct:]]|\\s)+cervi|([[:punct:]]|\\s)+uter[uaoi]+"
         print(regexp_not)
         
-        bad = grep(regexp_not,raw.txt,ignore.case = T)
-        raw.txt = raw.txt[-bad]
+#        bad = grep(regexp_not,raw.txt,ignore.case = T)
+#        raw.txt = raw.txt[-bad]
         print(paste("number of abstacts (after exclusivity pruning): ",length(raw.txt),sep=""))
         
         #####################################################################################
@@ -172,7 +172,7 @@ for (phe in phes) {
         # note that  "retractions" are taken care of in previous text mining script (by Julius)
 
         # TRANSLATOR OF SOME GENE NAMES
-        translator= read.table("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/TRANSLATOR_misspelled_gene_names.txt",
+        translator = read.table("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/TRANSLATOR_misspelled_gene_names.txt",
                                stringsAsFactors=F,h=T,sep="\t")
         #head(translator)
         from_length = nchar(translator$from)
@@ -180,7 +180,7 @@ for (phe in phes) {
         #head(translator); rm(from_length)
 
         # IF YOU DO NOT WANT TO USE TRANSLATOR - activate the following line:
-        #translator = data.frame(from="111111",to="222222")
+        translator = data.frame(from="111111",to="222222")
 
 cumm1=NULL  # cummulation of potential gene names extracted from abstracts
 cumm2=NULL  # cummulation of REAL gene names extracted from abstracts using TRANSLATOR
@@ -283,10 +283,21 @@ rm(gene.freq, genes, genes_1,genes_2, cumm1,cumm2,p1,p2)
 
 
 
+#####   save the results
+obg_xcl_trn = gene_lists  # obg = OBGYN, xcl = exclusivity filter, trn = with TRANSLATOR
+obg_xcl_unt = gene_lists  # obg = OBGYN, xcl = exclusivity filter, unt = no TRANSLATOR
+obg_nxc_trn = gene_lists  # obg = OBGYN, nxc = no exclusivity filter, unt = with TRANSLATOR
+obg_nxc_unt = gene_lists  # obg = OBGYN, nxc = no exclusivity filter, unt = no TRANSLATOR
+
+
+save(list=c("obg_xcl_trn","obg_xcl_unt","obg_nxc_trn","obg_nxc_unt"),
+     file="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/obgyn_genes.RData")
+     
+     
 ###########   PREVIEW
-temp=list(endm=gene_lists$ENDOMETRIUM$gene,miom=gene_lists$MYOMETRIUM$gene,
-          cerv = gene_lists$CERVIX$gene,uter = gene_lists$UTERUS$gene,
-          plac = gene_lists$PLACENTA$gene)
+temp=list(endom.=gene_lists$ENDOMETRIUM$gene,myom.=gene_lists$MYOMETRIUM$gene,
+          cervix = gene_lists$CERVIX$gene,uterus = gene_lists$UTERUS$gene,
+          placenta = gene_lists$PLACENTA$gene)
 venn(temp)
 
 
