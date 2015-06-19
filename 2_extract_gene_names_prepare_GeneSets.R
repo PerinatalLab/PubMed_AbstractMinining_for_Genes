@@ -78,6 +78,10 @@ for (phe in phes) {
         raw.txt=readLines(paste(PubMedDir,file_name,sep=""))
         print(paste("number of abstacts (initial): ",length(raw.txt),sep=""))
         
+        goo_length = which(nchar(raw.txt)>100)
+        raw.txt=raw.txt[goo_length]; rm(goo_length)
+        print(paste("number of abstacts (length > 100 smbls): ",length(raw.txt),sep=""))
+        
         # get rid of tab symbol in the begining of the text string
         for (i in 1:length(raw.txt)) raw.txt[i] = unlist(strsplit(raw.txt[i],"\t"))[2]
         
@@ -181,8 +185,7 @@ for (phe in phes) {
 cumm1=NULL  # cummulation of potential gene names extracted from abstracts
 cumm2=NULL  # cummulation of REAL gene names extracted from abstracts using TRANSLATOR
 
-for (j in 1:ntexts) {
-        print(paste(j,"/",ntexts,sep=""))
+for (j in 1:length(raw.txt)) {
         
         # this is the text that we will be working with in this cycle
         txt=raw.txt[j]
