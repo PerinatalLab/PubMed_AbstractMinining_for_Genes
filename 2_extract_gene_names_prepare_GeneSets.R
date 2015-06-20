@@ -47,8 +47,8 @@ animals=sort(unique(c(anim1,anim2)))
 
 
 PubMedDir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_DIGEST/"
-#file_list = list.files(PubMedDir,pattern="PLACEN|CERVIX|MYOMETR|ENDOMETR|UTER")  # pregnancy-related genes  ***
-file_list = list.files(PubMedDir,pattern="PENILE|BLADD|BONE|DENTAL|PROSTAT|TRACHE")  # control set of genes (other tissues) ***
+file_list = list.files(PubMedDir,pattern="PLACEN|CERVIX|MYOMETR|ENDOMETR|UTER")  # pregnancy-related genes  ***
+#file_list = list.files(PubMedDir,pattern="PENILE|BLADD|BONE|DENTAL|PROSTAT|TRACHE")  # control set of genes (other tissues) ***
 files_ok = file_list[grep("abstracts",file_list)]
 pheno=NULL; for (i in 1:length(files_ok))pheno = c(pheno, unlist(strsplit(files_ok[i],"_"))[4]); print(pheno)
 
@@ -60,7 +60,6 @@ phes = pheno
 ##  number of Abstracts before the cleaning
 n_abs0 = NULL
 for (phe in phes) {
-        #phe = "ENDOMETRIUM"
         file_name = files_ok[which(pheno==phe)]
         raw.txt=readLines(paste(PubMedDir,file_name,sep="")) ; length(raw.txt)
         #raw.txt= raw.txt[ grep("^Abstract",raw.txt)]  # only use content of the Abstract (due to exclusions of term words)
@@ -68,9 +67,7 @@ for (phe in phes) {
 }
 
         
-gene_lists = list()
-collection1= NULL  # for those with no limit on gene frequency (number of abstracts containing that gene name)
-collection2= NULL  # for those with minimum 2 abstracts mentioning the gene name
+gene_lists = list() # here tables for all phenotypes will be accumulated
 
 for (phe in phes) {
         print(phe)
@@ -253,6 +250,10 @@ restricted_acronyms = unique(c( "AGA","SGA","LGA","FGR","AFD","ART","DMP","GO","
                                 "ROP","OS","RDS","BPD","ROP","AIM","THE", "PGD","ADO","SDS","PLEC","HUVEC","ERA",
                                 "SPARC","FOR","THE","BCM","HEEC","MSC","LNG","AMP","CERTL","DDT","ANOVA","COCP","MIAC",
                                 "BAD","PRL","PGF","TERT","CAC","CTC","TTC","ISH","ECS","ESC","MPA","CGB","CGA","EVT"))
+# all above mentioned acronyms are included in gene-name TRANSLATOR file and thus can be detected via their "long-name"
+#hg[which(hg$HUGO %in% restricted_acronyms),]
+
+
 # congenital disorder of glycosylation (CDG)
 #IAI - intraamniotic infection
 #Osteogenesis Imperfecta

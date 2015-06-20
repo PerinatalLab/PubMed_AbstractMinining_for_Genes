@@ -6,6 +6,7 @@ hydroxyprostaglandin dehydrogenase 15	HPGD
 hydroxysteroid 11beta-dehydrogenase 1	HSD11B1
 phosphatidic acid phosphatase type 2B	PPAP2B
 TNF-related apoptosis-inducing ligand	TNFSF10
+secreted protein acidic cysteine-rich	SPARC
 insulin-like growth factor receptor	IGF1R
 chloramphenicol acetyl transferase	CAT 
 discoidin domain receptor member 2	DDR2
@@ -17,18 +18,30 @@ Plasminogen activator inhibitor-2	SERPINB2
 secretoglobin family 2A, member 2	SCGB2A2
 angiotensin II receptor, type II	AGTR2
 transforming growth factor beta2	TGFB2
+telomerase reverse transcriptase	TERT
+telomerase reverse-transcriptase	TERT
+Telomerase reverse transcriptase	TERT
+Telomerase reverse-transcriptase	TERT
 angiotensin II receptor, type 1	AGTR1
 angiotensin II receptor, type 2	AGTR2
 angiotensin II receptor, type I	AGTR1
 gonadotrophin-releasing hormone	GNRH1
 plasminogen activator inhibitor	SERPINE1
+phosphogluconate dehydrogenase	PGD
+Phosphogluconate dehydrogenase	PGD
 fumarylacetoacetate hydrolase	FAH
 insulin-like growth factor II	IGF2
 insulin-like growth factor 1	IGF1
 insulin-like growth factor 2	IGF2
 insulin-like growth factor I	IGF1
+phosphoglycolate phosphatase	PGP
+Phosphoglycolate phosphatase	PGP
 calmodulin binding protein	FABP1
 prostaglandin E synthase 2	PTGES2
+spectrin beta erythrocytic	SPTB
+Spectrin beta erythrocytic	SPTB
+phenylalanine hydroxylase	PAH
+Phenylalanine hydroxylase	PAH
 aldehyde dehydrogenase 1	ALDH1A3
 alpha1 type XVI collagen	COL16A1
 epithelial growth factor	EGF
@@ -43,6 +56,10 @@ frizzle-related protein	SFRP2
 nitric oxide synthase 1	NOS1
 nitric oxide synthase 2	NOS2
 nitric oxide synthase 3	NOS3
+aspartylglucosaminidase	AGA
+Aspartylglucosaminidase	AGA
+placental growth factor	PGF
+Placental growth factor	PGF
 collagen alpha2 type I	COL1A2
 estrogen receptor beta	ESR2
 Estrogen receptor beta	ESR2
@@ -50,6 +67,10 @@ estrogen receptor-beta	ESR2
 Estrogen receptor-beta	ESR2
 IL-6 signal transducer	IL6ST
 l-kynurenine hydrolase	KYNU
+placenta growth factor	PGF
+Placenta growth factor	PGF
+chorionic gonadotropin	CGB
+Chorionic gonadotropin	CGB
 actin binding protein	ABP
 bile salt export pump	ABCB11
 histone deacetylase 5	HDAC5
@@ -70,6 +91,12 @@ metalloproteinase-4	MMP4
 metalloproteinase-7	MMP7
 type I TNF receptor	TNFR1
 metallothionein 2A	MT2A
+carboxypeptidase E	CPE
+carboxypeptidase-E	CPE
+Carboxypeptidase E	CPE
+Carboxypeptidase-E	CPE
+serine dehydratase	SDS
+Serine dehydratase	SDS
 estrogen receptor	ESR1
 oxytocin receptor	OXTR
 cyclooxygenase-2	PTGS2
@@ -83,6 +110,8 @@ IL-13 receptor	IL13RA1
 IL-15 receptor	IL15RA
 IL-18 receptor	IL18R1
 lipocortin III	ANXA3
+ferritin light	FTL
+Ferritin light	FTL
 collagen-11A1	COL11A1
 IL-1 receptor	IL1R1
 IL-2 receptor	IL2RA
@@ -200,6 +229,7 @@ TNF-alpha	TNF
 (ADAM) 30	ADAM30
 (ADAM) 32	ADAM32
 (ADAM) 33	ADAM33
+Prolactin	PRL
 cyclin B	CCNB1
 ER alpha	ESR1
 ER-alpha	ESR1
@@ -484,6 +514,10 @@ TNFalpha	TNF
 (DNMT) 1	DNMT1
 (VCAM)-1	VCAM1
 (VCAM) 1	VCAM1
+musculin	MSC
+Musculin	MSC
+catalase	CAT
+Catalase	CAT
 (COX)-2	PTGS2
 activin	INHBA
 decorin	DCN
@@ -908,6 +942,8 @@ ADAM-33	ADAM33
 (BRCA)2	BRCA2
 (DNMT)1	DNMT1
 (VCAM)1	VCAM1
+plectin	PLEC
+Plectin	PLEC
 CGbeta	CGB
 ERbeta	ESR2
 IGF-II	IGF2
