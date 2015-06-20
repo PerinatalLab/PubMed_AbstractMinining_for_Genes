@@ -268,52 +268,38 @@ temp1=data.frame(gene=names(table(genes)),freq=as.numeric(table(genes)),stringsA
 temp2= merge(temp1,hg,by.x="gene",by.y="HUGO",all.x=T); rm(temp1)
 gene.freq=temp2[rev(order(temp2$freq)),]; rm(temp2)
 #gene.freq[1:20,]
-
-#dim(gene.freq)
-#hist(as.numeric(table(genes)),breaks=100,col="grey")
-
-p1= data.frame(ENTREZ = gene.freq[ gene.freq$freq>=1,"ENTREZ"], GENESET = paste("PM",":",phe,sep=""),Descript="obs>=1")
-p2= data.frame(ENTREZ = gene.freq[ gene.freq$freq>=2,"ENTREZ"], GENESET = paste("PM",":",phe,sep=""),Descript="obs>=2")
-#p3= data.frame(ENTREZ = gene.freq[ gene.freq$freq>=3,"ENTREZ"], GENESET = paste("PubMed",":",phe,"_3plus",sep=""),Descript="Abstract mining")
-#p4= data.frame(ENTREZ = gene.freq[ gene.freq$freq>=4,"ENTREZ"], GENESET = paste("PubMed",":",phe,"_4plus",sep=""),Descript="Abstract mining")
-#temp = rbind(p1,p2,p3,p4)
-#head(p1); head(collection)
-collection1 = rbind( collection1, p1) 
-collection2 = rbind( collection2, p2) 
-#dim(collection); head(collection)
-
-
-#####
-
-#list.files(".",pattern = "^HAR")
 gene_lists[[phe]]=gene.freq
-rm(gene.freq, genes, genes_1,genes_2, cumm1,cumm2,p1,p2)
+rm(gene.freq, genes, genes_1,genes_2, cumm1,cumm2)
 } # end of cycling through various phenotypes
 
 
 
+############################################
+################   save the results
 
-#####   save the results
+# for pregnancy related genes
 obg_xcl_trn = gene_lists  # obg = OBGYN, xcl = exclusivity filter, trn = with TRANSLATOR
 obg_xcl_unt = gene_lists  # obg = OBGYN, xcl = exclusivity filter, unt = no TRANSLATOR
 obg_nxc_trn = gene_lists  # obg = OBGYN, nxc = no exclusivity filter, trn = with TRANSLATOR
 obg_nxc_unt = gene_lists  # obg = OBGYN, nxc = no exclusivity filter, unt = no TRANSLATOR
 save(list=c("obg_xcl_trn","obg_xcl_unt","obg_nxc_trn","obg_nxc_unt"),
      file="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/obgyn_genes.RData")
-     
+
+# for control set of genes
 ctrl_nxc_trn = gene_lists  # ctrl = CONTRAL, xcl = exclusivity filter, trn = with TRANSLATOR
 ctrl_xcl_trn = gene_lists  # ctrl = CONTRAL, nxc = no exclusivity filter, trn = with TRANSLATOR
 save(list=c("ctrl_nxc_trn","ctrl_xcl_trn"),
      file="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/cntrl_genes.RData")
 
 
-
+############################################
 ###########   PREVIEW
+
+# for pregnancy-related genes
 temp=list(endom.=gene_lists$ENDOMETRIUM$gene,myom.=gene_lists$MYOMETRIUM$gene,
           cervix = gene_lists$CERVIX$gene,uterus = gene_lists$UTERUS$gene,
           placenta = gene_lists$PLACENTA$gene)
 venn(temp)
-
 
 # for control-set of tissues/phenotypes
 temp=list(bladder = gene_lists$BLADDER$gene,bone=gene_lists$BONE$gene,
@@ -322,62 +308,53 @@ temp=list(bladder = gene_lists$BLADDER$gene,bone=gene_lists$BONE$gene,
 venn(temp)
 
 
+########################################################################
+########################################################################
+######################### export the gene sets
+
+rm(list=ls())  # cleanup
+load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/obgyn_genes.RData")
+load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/cntrl_genes.RData")
+lst=ls()
+obj_lst = lst[grep("^obg_|^ctrl_",lst)]  # gene frequencies per each phenotype/tissue
+
+for (z in 1:length(obj_lst)) {  # for each type of settings
+        temp_obj = get(obj_lst[z])
+        types = names(temp_obj)
+        col1 = col2 = NULL  # collectors
+        for (type in types) { # for each type of tissue
+                gene.freq=temp_obj[[type]]        
+                temp1 = data.frame(ENTREZ = gene.freq[gene.freq$freq>=1,"ENTREZ"],
+                                   GENESET=paste("PM",":",type,sep=""),
+                                   Descript=paste("obs>=1",paste(unlist(strsplit(obj_lst[z],
+                                  "_"))[2:3],collapse=","),sep=","))
+                col1=rbind(col1,temp1)
+                temp2 = data.frame(ENTREZ = gene.freq[gene.freq$freq>=2,"ENTREZ"],
+                                   GENESET=paste("PM",":",type,sep=""),
+                                   Descript=paste("obs>=2",paste(unlist(strsplit(obj_lst[z],
+                                       "_"))[2:3],collapse=","),sep=","))
+                col2=rbind(col2,temp2); rm(gene.freq,temp1,temp2)
+        }
+        
+        middle = paste(unlist(strsplit(obj_lst[z],"_")),collapse=".")
+        folder = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_GENES/"
+        
+        # no restriction on gene frequency
+        printout=col1
+        colnames(printout)[1]=paste("##",colnames(printout)[1],sep="")
+        file_name = paste(folder,"PubMed_",middle,".min1","_",length(types),"pheOvrlp.txt",sep="")
+        write.table(printout,file_name,row.names=F,col.names=T,sep="\t",quote=F)
+        
+        printout=col2
+        colnames(printout)[1]=paste("##",colnames(printout)[1],sep="")
+        file_name = paste(folder,"PubMed_",middle,".min2","_",length(types),"pheOvrlp.txt",sep="")
+        write.table(printout,file_name,row.names=F,col.names=T,sep="\t",quote=F)
+        rm(col1,col2,file_name,printout,middle,folder,temp_obj,types)
+}
 
 
-da = gene_lists$TRACHEA
-head(da)
+### below need a review
 
-
-###############   create a simplistic gene-set file  ( where sets might overlap)
-table(collection1$GENESET)
-table(collection2$GENESET)
-
-###   save all FIVE tissues (including fetal placenta)
-# no restriction on gene frequency
-printout=collection1
-colnames(printout)[1]=paste("##",colnames(printout)[1],sep="")
-folder = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_GENES/"
-write.table(printout,paste(folder,"PubMed_OBGuntrn1min_5tissOverlap.txt",sep=""),
-            row.names=F,col.names=T,sep="\t",quote=F) # translated or untranslated ? 
-
-# with restriction on gene frequency
-printout=collection2
-colnames(printout)[1]=paste("##",colnames(printout)[1],sep="")
-folder = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_GENES/"
-write.table(printout,paste(folder,"PubMed_OBGuntrn2min_5tissOverlap.txt",sep=""),
-            row.names=F,col.names=T,sep="\t",quote=F) # translated or untranslated ? 
-
-
-###   now without PLACENTA ( since that is a fetal tissue)
-# no restriction on gene frequency
-printout=collection1[which(collection1$GENESET != "PM:PLACENTA"),]
-colnames(printout)[1]=paste("##",colnames(printout)[1],sep="")
-folder = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_GENES/"
-write.table(printout,paste(folder,"PubMed_OBGuntrn1min_4tissOverlap.txt",sep=""),
-            row.names=F,col.names=T,sep="\t",quote=F) # translated or untranslated ? 
-
-# with a restriction on gene frequency
-printout=collection2[which(collection2$GENESET != "PM:PLACENTA"),]
-colnames(printout)[1]=paste("##",colnames(printout)[1],sep="")
-folder = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_GENES/"
-write.table(printout,paste(folder,"PubMed_OBGuntrn2min_4tissOverlap.txt",sep=""),
-            row.names=F,col.names=T,sep="\t",quote=F) # translated or untranslated ? 
-
-
-### save the control-set of genes
-# no restriction on gene frequency
-printout=collection1
-colnames(printout)[1]=paste("##",colnames(printout)[1],sep="")
-folder = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_GENES/"
-write.table(printout,paste(folder,"PubMed_CONTROLtrnsl1min_6tissOverlap.txt",sep=""),
-            row.names=F,col.names=T,sep="\t",quote=F) # translated or untranslated ? 
-
-# with restriction on gene frequency
-printout=collection2
-colnames(printout)[1]=paste("##",colnames(printout)[1],sep="")
-folder = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_GENES/"
-write.table(printout,paste(folder,"PubMed_CONTROLtrnsl2min_6tissOverlap.txt",sep=""),
-            row.names=F,col.names=T,sep="\t",quote=F) # translated or untranslated ? 
 
 
 
@@ -388,7 +365,7 @@ write.table(printout,paste(folder,"PubMed_CONTROLtrnsl2min_6tissOverlap.txt",sep
 ################################################################
 ################################################################
 
-head(collection)
+......      not finished below   .........
 
 #############   EXTARCT OVERLAPING AND UNIQUE GENES for each phenotype
 all_genes = list()
@@ -444,11 +421,5 @@ mmm = merge(hg , ggg, by.x= "ENTREZ" ,by.y= "V1", all= F)
 my_genes %in% mmm$HUGO
 my_genes %in% common
 
-
-
-
-##### raw texts
-
-raw.txt[171:185]
 
 
