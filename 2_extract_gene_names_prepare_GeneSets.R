@@ -5,7 +5,7 @@
 # 2) run Julius' script that that eliminates everything except abstracts
 # 3) run this script that further prunes abstracts and extracts gene names
 
-rm(list=ls())
+#rm(list=ls())
 
 # load the full collection human genes
 hg=read.table("~/Biostuff/hg19_HUMAN_GENES/ucsc_HUGO_ENTREZ_chr1-23_withDescriptions_hg19_PROCESSED.txt",
@@ -57,17 +57,6 @@ pheno=NULL; for (i in 1:length(files_ok))pheno = c(pheno, unlist(strsplit(files_
 #phes = c("PREGNANCY","CERVIX","ENDOMETRIUM","MYOMETRIUM","PRETERM","BIRTH","GESTATIONAL","UTERINE","PLACENTA")
 #phes =  c("ENDOMETRIUM","MYOMETRIUM","CERVIX","UTERUS","PLACENTA")
 phes = pheno
-
-
-##  number of Abstracts before the cleaning
-n_abs0 = NULL
-for (phe in phes) {
-        file_name = files_ok[which(pheno==phe)]
-        raw.txt=readLines(paste(PubMedDir,file_name,sep="")) ; length(raw.txt)
-        #raw.txt= raw.txt[ grep("^Abstract",raw.txt)]  # only use content of the Abstract (due to exclusions of term words)
-        n_abs0 = c(n_abs0,length(raw.txt))
-}
-
         
 gene_lists = list() # here tables for all phenotypes will be accumulated
 summary_lists = list() # here will be collected numbers of abstracts remaining after each step
@@ -292,8 +281,8 @@ gene.freq=temp2[rev(order(temp2$freq)),]; rm(temp2)
 gene_lists[[phe]]=gene.freq
 rm(gene.freq, genes, genes_1,genes_2, cumm1,cumm2,cumm3)
 
-summary_lists[[phe]] = c(n_abstracts_1,n_abstracts_2,n_abstracts_3,n_abstracts_4,n_abstracts_5)
-rm(n_abstracts_1,n_abstracts_2,n_abstracts_3,n_abstracts_4,n_abstracts_5)
+summary_lists[[phe]] = c(n_abstracts_0,n_abstracts_1,n_abstracts_2,n_abstracts_3,n_abstracts_4,n_abstracts_5)
+rm(n_abstracts_0,n_abstracts_1,n_abstracts_2,n_abstracts_3,n_abstracts_4,n_abstracts_5)
 
 } # end of cycling through various phenotypes
 
@@ -305,11 +294,25 @@ rm(n_abstracts_1,n_abstracts_2,n_abstracts_3,n_abstracts_4,n_abstracts_5)
 ################   save the results
 
 # for pregnancy related genes
-obg_xcl_trn = gene_lists  # obg = OBGYN, xcl = exclusivity filter, trn = with TRANSLATOR
-obg_xcl_unt = gene_lists  # obg = OBGYN, xcl = exclusivity filter, unt = no TRANSLATOR
-obg_nxc_trn = gene_lists  # obg = OBGYN, nxc = no exclusivity filter, trn = with TRANSLATOR
+if( (exclusivity_pruning==TRUE)&(translator_usage==TRUE)) {
+obg_xcl_trn = gene_lists  # obg = OBGYN, xcl = exclusivity filter ON, trn = TRANSLATOR ON
+obg_xcl_trn_stats = summary_lists  # obg = OBGYN, xcl = exclusivity filter ON, trn = TRANSLATOR ON
+}
+
+if( (exclusivity_pruning==FALSE)&(translator_usage==TRUE)) {
+obg_nxc_trn = gene_lists  # obg = OBGYN, nxc = exclusivity filter OFF, trn = TRANSLATOR ON
+obg_nxc_trn_stats = summary_lists  # obg = OBGYN, nxc = exclusivity filter OFF, trn = TRANSLATOR ON
+}
+
+if( (exclusivity_pruning==TRUE)&(translator_usage==FALSE)) {
+obg_xcl_unt = gene_lists  # obg = OBGYN, xcl = exclusivity filter ON, unt = TRANSLATOR OFF
+obg_xcl_unt_stats = summary_lists  # obg = OBGYN, xcl = exclusivity filter ON, unt = TRANSLATOR OFF
+}
+
+
 obg_nxc_unt = gene_lists  # obg = OBGYN, nxc = no exclusivity filter, unt = no TRANSLATOR
-save(list=c("obg_xcl_trn","obg_xcl_unt","obg_nxc_trn","obg_nxc_unt"),
+save(list=c("obg_xcl_trn","obg_xcl_unt","obg_nxc_trn","obg_nxc_unt",
+            "obg_xcl_trn_stats","obg_xcl_unt_stats","obg_nxc_trn_stats","obg_nxc_unt_stats"),
      file="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/obgyn_genes.RData")
 
 # for control set of genes
