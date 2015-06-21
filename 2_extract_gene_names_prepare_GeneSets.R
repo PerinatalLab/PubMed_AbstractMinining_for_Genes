@@ -297,23 +297,32 @@ rm(n_abstracts_0,n_abstracts_1,n_abstracts_2,n_abstracts_3,n_abstracts_4,n_abstr
 if( (exclusivity_pruning==TRUE)&(translator_usage==TRUE)) {
 obg_xcl_trn = gene_lists  # obg = OBGYN, xcl = exclusivity filter ON, trn = TRANSLATOR ON
 obg_xcl_trn_stats = summary_lists  # obg = OBGYN, xcl = exclusivity filter ON, trn = TRANSLATOR ON
+obg_xcl_trn_hash = system(paste("git log --pretty=format:'%h' -n 1"),intern=TRUE)
 }
 
 if( (exclusivity_pruning==FALSE)&(translator_usage==TRUE)) {
 obg_nxc_trn = gene_lists  # obg = OBGYN, nxc = exclusivity filter OFF, trn = TRANSLATOR ON
 obg_nxc_trn_stats = summary_lists  # obg = OBGYN, nxc = exclusivity filter OFF, trn = TRANSLATOR ON
+obg_nxc_trn_hash = system(paste("git log --pretty=format:'%h' -n 1"),intern=TRUE)
 }
 
 if( (exclusivity_pruning==TRUE)&(translator_usage==FALSE)) {
 obg_xcl_unt = gene_lists  # obg = OBGYN, xcl = exclusivity filter ON, unt = TRANSLATOR OFF
 obg_xcl_unt_stats = summary_lists  # obg = OBGYN, xcl = exclusivity filter ON, unt = TRANSLATOR OFF
+obg_xcl_unt_hash = system(paste("git log --pretty=format:'%h' -n 1"),intern=TRUE)
 }
 
+if( (exclusivity_pruning==FALSE)&(translator_usage==FALSE)) {
+obg_nxc_unt = gene_lists  # obg = OBGYN, nxc = exclusivity filter OFF, unt = TRANSLATOR OFF
+obg_nxc_unt_stats = summary_lists  # obg = OBGYN, nxc = exclusivity filter OFF, unt = TRANSLATOR OFF
+obg_nxc_unt_hash = system(paste("git log --pretty=format:'%h' -n 1"),intern=TRUE)
+}
 
-obg_nxc_unt = gene_lists  # obg = OBGYN, nxc = no exclusivity filter, unt = no TRANSLATOR
 save(list=c("obg_xcl_trn","obg_xcl_unt","obg_nxc_trn","obg_nxc_unt",
-            "obg_xcl_trn_stats","obg_xcl_unt_stats","obg_nxc_trn_stats","obg_nxc_unt_stats"),
-     file="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/obgyn_genes.RData")
+            "obg_xcl_trn_stats","obg_xcl_unt_stats","obg_nxc_trn_stats","obg_nxc_unt_stats",
+            "obg_xcl_trn_hash","obg_xcl_unt_hash","obg_nxc_trn_hash","obg_nxc_unt_hash"),
+     file="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/obgn_genes.RData")
+
 
 # for control set of genes
 ctrl_nxc_trn = gene_lists  # ctrl = CONTRAL, xcl = exclusivity filter, trn = with TRANSLATOR
