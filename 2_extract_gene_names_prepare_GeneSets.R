@@ -49,8 +49,8 @@ animals=sort(unique(c(anim1,anim2))); rm(anim1,anim2)
 
 
 PubMedDir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_DIGEST/"
-file_list = list.files(PubMedDir,pattern="PLACEN|CERVIX|MYOMETR|ENDOMETR|UTER")  # pregnancy-related genes  ***
-#file_list = list.files(PubMedDir,pattern="PENILE|BLADD|BONE|DENTAL|PROSTAT|TRACHE")  # control set of genes (other tissues) ***
+#file_list = list.files(PubMedDir,pattern="PLACEN|CERVIX|MYOMETR|ENDOMETR|UTER")  # pregnancy-related genes  ***
+file_list = list.files(PubMedDir,pattern="PENILE|BLADD|BONE|DENTAL|PROSTAT|TRACHE")  # control set of genes (other tissues) ***
 files_ok = file_list[grep("abstracts",file_list)]
 pheno=NULL; for (i in 1:length(files_ok))pheno = c(pheno, unlist(strsplit(files_ok[i],"_"))[4]); print(pheno)
 
@@ -61,7 +61,7 @@ phes = pheno
 gene_lists = list() # here tables for all phenotypes will be accumulated
 summary_lists = list() # here will be collected numbers of abstracts remaining after each step
 
-exclusivity_pruning = FALSE
+exclusivity_pruning = TRUE
 translator_usage = TRUE
 
 for (phe in phes) {
@@ -294,6 +294,7 @@ rm(n_abstracts_0,n_abstracts_1,n_abstracts_2,n_abstracts_3,n_abstracts_4,n_abstr
 ################   save the results
 
 # for pregnancy related genes
+
 if( (exclusivity_pruning==TRUE)&(translator_usage==TRUE)) {
 obg_xcl_trn = gene_lists  # obg = OBGYN, xcl = exclusivity filter ON, trn = TRANSLATOR ON
 obg_xcl_trn_stats = summary_lists  # obg = OBGYN, xcl = exclusivity filter ON, trn = TRANSLATOR ON
@@ -318,6 +319,13 @@ obg_nxc_unt_stats = summary_lists  # obg = OBGYN, nxc = exclusivity filter OFF, 
 obg_nxc_unt_hash = system(paste("git log --pretty=format:'%h' -n 1"),intern=TRUE)
 }
 
+# short version
+save(list=c("obg_xcl_trn","obg_nxc_trn",
+            "obg_xcl_trn_stats","obg_nxc_trn_stats",
+            "obg_xcl_trn_hash","obg_nxc_trn_hash"),
+     file="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/obgn_genes.RData")
+
+# long version
 save(list=c("obg_xcl_trn","obg_xcl_unt","obg_nxc_trn","obg_nxc_unt",
             "obg_xcl_trn_stats","obg_xcl_unt_stats","obg_nxc_trn_stats","obg_nxc_unt_stats",
             "obg_xcl_trn_hash","obg_xcl_unt_hash","obg_nxc_trn_hash","obg_nxc_unt_hash"),
@@ -325,10 +333,25 @@ save(list=c("obg_xcl_trn","obg_xcl_unt","obg_nxc_trn","obg_nxc_unt",
 
 
 # for control set of genes
-ctrl_nxc_trn = gene_lists  # ctrl = CONTRAL, xcl = exclusivity filter, trn = with TRANSLATOR
-ctrl_xcl_trn = gene_lists  # ctrl = CONTRAL, nxc = no exclusivity filter, trn = with TRANSLATOR
-save(list=c("ctrl_nxc_trn","ctrl_xcl_trn"),
+if( (exclusivity_pruning==TRUE)&(translator_usage==TRUE)) {
+        ctrl_xcl_trn = gene_lists  # ctrl = CONTROL, xcl = exclusivity filter ON, trn = TRANSLATOR ON
+        ctrl_xcl_trn_stats = summary_lists  # ctrl = CONTROL, xcl = exclusivity filter ON, trn = TRANSLATOR ON
+        ctrl_xcl_trn_hash = system(paste("git log --pretty=format:'%h' -n 1"),intern=TRUE)
+}
+
+if( (exclusivity_pruning==FALSE)&(translator_usage==TRUE)) {
+        ctrl_nxc_trn = gene_lists  # ctrl = CONTROL, nxc = exclusivity filter OFF, trn = TRANSLATOR ON
+        ctrl_nxc_trn_stats = summary_lists  # ctrl = CONTROL, nxc = exclusivity filter OFF, trn = TRANSLATOR ON
+        ctrl_nxc_trn_hash = system(paste("git log --pretty=format:'%h' -n 1"),intern=TRUE)
+}
+
+
+save(list=c("ctrl_xcl_trn","ctrl_nxc_trn",
+            "ctrl_xcl_trn_stats","ctrl_nxc_trn_stats",
+            "ctrl_xcl_trn_hash","ctrl_nxc_trn_hash"),
      file="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/cntrl_genes.RData")
+
+
 
 
 ############################################
@@ -352,10 +375,10 @@ venn(temp)
 ######################### export the gene sets
 
 rm(list=ls())  # cleanup
-load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/obgyn_genes.RData")
-load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/cntrl_genes.RData")
+load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/obgn_genes.RData")
+#load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/cntrl_genes.RData")
 lst=ls()
-obj_lst = lst[grep("^obg_|^ctrl_",lst)]  # gene frequencies per each phenotype/tissue
+obj_lst = lst[grep("^obg_.{7,7}$|^ctrl_.{7,7}$",lst)]  # gene frequencies per each phenotype/tissue
 
 for (z in 1:length(obj_lst)) {  # for each type of settings
         temp_obj = get(obj_lst[z])
