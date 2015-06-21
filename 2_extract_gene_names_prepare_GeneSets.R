@@ -45,7 +45,7 @@ anim1 = read.table("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/
 anim1=sort(unique(tolower(anim1[,1])))
 anim2 = unique(c("animal","cattle","buffalo","ruminant", "cow","dog","rat","pig","cat","lion","horse","monkey","mouse",
                  "cows","dogs","rats","pigs","cats","lions","horses","monkeys","mice"))
-animals=sort(unique(c(anim1,anim2)))
+animals=sort(unique(c(anim1,anim2))); rm(anim1,anim2)
 
 
 PubMedDir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_DIGEST/"
@@ -70,6 +70,7 @@ for (phe in phes) {
 
         
 gene_lists = list() # here tables for all phenotypes will be accumulated
+summary_lists = list() # here will be collected numbers of abstracts remaining after each step
 
 exclusivity_pruning = TRUE
 translator_usage = TRUE
@@ -79,10 +80,12 @@ for (phe in phes) {
         file_name = files_ok[which(pheno==phe)]
         raw.txt=readLines(paste(PubMedDir,file_name,sep=""))
         print(paste("number of abstacts (initial): ",length(raw.txt),sep=""))
+        n_abstracts_0 = length(raw.txt)
         
         goo_length = which(nchar(raw.txt)>100)
         raw.txt=raw.txt[goo_length]; rm(goo_length)
         print(paste("number of abstacts (length > 100 smbls): ",length(raw.txt),sep=""))
+        n_abstracts_1 = length(raw.txt)
         
         # get rid of tab symbol in the begining of the text string
         for (i in 1:length(raw.txt)) raw.txt[i] = unlist(strsplit(raw.txt[i],"\t"))[2]
@@ -115,6 +118,7 @@ for (phe in phes) {
         
         print(paste("number of abstacts (after exclusivity pruning): ",
                     ifelse(exclusivity_pruning,length(raw.txt),"NOT DONE"),sep=""))
+        n_abstracts_2 = length(raw.txt)
         
         #####################################################################################
         ####  get rid of abstracts that contain other restricted code words
@@ -129,6 +133,7 @@ for (phe in phes) {
         bad.lines=unique(c(bad.lines2,bad.lines3,bad.lines4,bad.lines5,bad.lines6)); length(bad.lines)
         raw.txt=raw.txt[-bad.lines]
         print(paste("number of abstacts (after pop disease pruning): ",length(raw.txt),sep=""))
+        n_abstracts_3 = length(raw.txt)
         
         #####################################################################################
         ####  get rid of abstracts that are not realistically important and might contain biases (ANIMAL studies)
@@ -158,6 +163,7 @@ for (phe in phes) {
         #raw.txt[which(animal_test)]
         raw.txt=raw.txt[-which(animal_test)]
         print(paste("number of abstacts (after animal pruning): ",length(raw.txt),sep=""))
+        n_abstracts_4 = length(raw.txt)
         
         #####################################################################################
         ####  get rid of abstracts that contain forbiden medical terms (medical conditions)        
@@ -182,8 +188,9 @@ for (phe in phes) {
         #table(disease_test)
         #sort(unique(unlist(lst)))
         
-        # clean-up
+        # final clean-up
         raw.txt=raw.txt[-which(disease_test)]
+        n_abstracts_5 = length(raw.txt)
         print(paste("number of abstacts (after rare disease pruning): ",length(raw.txt),sep=""))
         # note that  "retractions" are taken care of in previous text mining script (by Julius)
         
@@ -208,9 +215,6 @@ for (phe in phes) {
         # almost all above mentioned acronyms are included in gene-name TRANSLATOR file and thus can be detected via their "long-name"
         #hg[which(hg$HUGO %in% restricted_acronyms),]
         # congenital disorder of glycosylation (CDG) #IAI = intraamniotic infection # OI = Osteogenesis Imperfecta
-        
-        
-
         
 cumm1=NULL  # cummulation of potential gene names extracted from abstracts without TRANSLATOR
 cumm2=NULL  # cummulation of REAL gene names extracted from abstracts using TRANSLATOR
@@ -287,6 +291,9 @@ gene.freq=temp2[rev(order(temp2$freq)),]; rm(temp2)
 #gene.freq[1:20,]
 gene_lists[[phe]]=gene.freq
 rm(gene.freq, genes, genes_1,genes_2, cumm1,cumm2,cumm3)
+
+summary_lists[[phe]] = c(n_abstracts_1,n_abstracts_2,n_abstracts_3,n_abstracts_4,n_abstracts_5)
+rm(n_abstracts_1,n_abstracts_2,n_abstracts_3,n_abstracts_4,n_abstracts_5)
 
 } # end of cycling through various phenotypes
 
