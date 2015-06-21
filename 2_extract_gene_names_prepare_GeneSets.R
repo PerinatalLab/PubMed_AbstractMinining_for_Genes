@@ -61,7 +61,7 @@ phes = pheno
 gene_lists = list() # here tables for all phenotypes will be accumulated
 summary_lists = list() # here will be collected numbers of abstracts remaining after each step
 
-exclusivity_pruning = TRUE
+exclusivity_pruning = FALSE
 translator_usage = TRUE
 
 for (phe in phes) {
