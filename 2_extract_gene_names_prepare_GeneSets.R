@@ -375,14 +375,24 @@ venn(temp)
 ######################### export the gene sets
 
 rm(list=ls())  # cleanup
+
+### option for the pregnancy-related of phenotypes(tissues)
 load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/obgn_genes.RData")
-#load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/cntrl_genes.RData")
 lst=ls()
 obj_lst = lst[grep("^obg_.{7,7}$|^ctrl_.{7,7}$",lst)]  # gene frequencies per each phenotype/tissue
+
+### option for the control-set of phenotypes(tissues)
+#load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/cntrl_genes.RData")
+#lst=ls()
+#obj_lst = lst[grep("^ctrl_.{7,7}$|^ctrl_.{7,7}$",lst)]  # gene frequencies per each phenotype/tissue
 
 for (z in 1:length(obj_lst)) {  # for each type of settings
         temp_obj = get(obj_lst[z])
         types = names(temp_obj)
+        
+        # optional (depending on whether we want to include everything or only relevant)   ***
+        types = types[ which( !types %in% c("PLACENTA","DENTAL","TRACHEA"))]  # suppress or leave 
+        
         col1 = col2 = NULL  # collectors
         for (type in types) { # for each type of tissue
                 gene.freq=temp_obj[[type]]        
