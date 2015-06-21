@@ -5,13 +5,15 @@
 # 2) run Julius' script that that eliminates everything except abstracts
 # 3) run this script that further prunes abstracts and extracts gene names
 
+rm(list=ls())
 
 # load the full collection human genes
 hg=read.table("~/Biostuff/hg19_HUMAN_GENES/ucsc_HUGO_ENTREZ_chr1-23_withDescriptions_hg19_PROCESSED.txt",
               stringsAsFactors=F,h=F); dim(hg); head(hg); table(hg$V1)
 colnames(hg)=c("CHR","START","END","ENTREZ","HUGO","Description")
-hg_genes=hg[which(nchar(hg$HUGO)>2),"HUGO"]; length(hg_genes) # arguably too much risk with short gene names
+hg_genes=hg[which(nchar(hg$HUGO)>1),"HUGO"]; length(hg_genes) # 2 = arguably too much risk with short gene names
 #hg[grep("IL+[1-2]{1,1}$",hg$HUGO),][1:10,]
+
 
 # explore how many letters usually are there in the HUGO gene name (from left side)
 #ltrs = NULL; for (i in 1:dim(hg)[1]) ltrs = c(ltrs, unlist(strsplit(hg[i,"HUGO"],"[0-9]"))[1])
@@ -69,6 +71,9 @@ for (phe in phes) {
         
 gene_lists = list() # here tables for all phenotypes will be accumulated
 
+exclusivity_pruning = TRUE
+translator_usage = TRUE
+
 for (phe in phes) {
         print(phe)
         file_name = files_ok[which(pheno==phe)]
@@ -85,6 +90,7 @@ for (phe in phes) {
         # optional stage ("exclusivity pruning")
         #####################################################################################
         ####  get rid of abstracts that contain a keyword from other phenotypes/tissues/keywords
+        if (exclusivity_pruning==TRUE) {
         
         # for pregnancy-related genes
         if (phe=="ENDOMETRIUM") regexp_not="myometr|([[:punct:]]|\\s)+cervi|([[:punct:]]|\\s)+uter[uaoi]+|placent"
@@ -105,18 +111,22 @@ for (phe in phes) {
         ## decide now whether ou want to use exclusivity filter or not
         bad = grep(regexp_not,raw.txt,ignore.case = T)  # ***
         raw.txt = raw.txt[-bad]    #                           ****
-        print(paste("number of abstacts (after exclusivity pruning): ",length(raw.txt),sep=""))
+        }
+        
+        print(paste("number of abstacts (after exclusivity pruning): ",
+                    ifelse(exclusivity_pruning,length(raw.txt),"NOT DONE"),sep=""))
         
         #####################################################################################
         ####  get rid of abstracts that contain other restricted code words
-        
-        bad.lines3=unique(grep("purpura|fulminans|diabet|cancer|obesity|leukemi|alzheim|schizo|adhd|fibroid",raw.txt,ignore.case=T))
-        bad.lines4=unique(grep("chlamydia|coronar.{2,30}diseas| stroke|migraine",raw.txt,ignore.case=T))        
-        bad.lines5=unique(grep("genetic defects|asthma|down syndrome",raw.txt,ignore.case=T))
+        bad.lines2=unique(grep("dementia|alzheim|schizo|adhd|autism|asperg",raw.txt,ignore.case=T))
+        bad.lines3=unique(grep("purpura|fulminans|diabet|cancer|obesity|leukemi|fibroid",raw.txt,ignore.case=T))
+        bad.lines4=unique(grep("chlamydia|coronar.{2,30}diseas| stroke|migraine|influenza",raw.txt,ignore.case=T))        
+        bad.lines5=unique(grep("genetic defects|asthma|down syndrome|down's syndrome|klinefelt",raw.txt,ignore.case=T))
         bad.lines6=unique(grep("preimplantation genetic diagnosis|azoospermia",raw.txt,ignore.case=T))
         # not yet included:   tumor (but should not be used since "tumor necrosis factor".....)
+        # not yet included: "syndrome" (too broad term?)
         
-        bad.lines=unique(c(bad.lines3,bad.lines4,bad.lines5,bad.lines6)); length(bad.lines)
+        bad.lines=unique(c(bad.lines2,bad.lines3,bad.lines4,bad.lines5,bad.lines6)); length(bad.lines)
         raw.txt=raw.txt[-bad.lines]
         print(paste("number of abstacts (after pop disease pruning): ",length(raw.txt),sep=""))
         
@@ -175,29 +185,45 @@ for (phe in phes) {
         # clean-up
         raw.txt=raw.txt[-which(disease_test)]
         print(paste("number of abstacts (after rare disease pruning): ",length(raw.txt),sep=""))
-        
         # note that  "retractions" are taken care of in previous text mining script (by Julius)
-
-        # TRANSLATOR OF SOME GENE NAMES
-        translator = read.table("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/TRANSLATOR_misspelled_gene_names.txt",
-                               stringsAsFactors=F,h=T,sep="\t")
-        #head(translator)
-        from_length = nchar(translator$from)
-        translator = translator[order(from_length,decreasing = T),]
-        #head(translator); rm(from_length)
-
-        # DECIDE IF YOU DO NOT WANT TO USE TRANSLATOR - activate the following line:  
-        #translator = data.frame(from="111111",to="222222")   #  ***
-
-cumm1=NULL  # cummulation of potential gene names extracted from abstracts
-cumm2=NULL  # cummulation of REAL gene names extracted from abstracts using TRANSLATOR
-
-for (j in 1:length(raw.txt)) {
         
+        # DECISION WHETHER TRANSLATOR should be used
+        if (translator_usage==TRUE) {
+                translator = read.table("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/TRANSLATOR_misspelled_gene_names.txt",
+                                        stringsAsFactors=F,h=T,sep="\t") # TRANSLATOR OF SOME GENE NAMES
+                from_length = nchar(translator$from)
+                translator = translator[order(from_length,decreasing = T),]
+        } else { translator = data.frame(from="111111",to="222222") }
+
+        
+        # define dangerous gene names that are also biomed acronyms
+        restricted_acronyms = unique(c( "AGA","SGA","LGA","FGR","AFD","ART","DMP","GO","IUGR","FGR","MC","DC","ECM","CDG",
+                                        "SPTB","PTL","WAS","FTL","BPD","RDS","PTD","PTB","PROM","PPROM","PTL","CPHD","IAI",
+                                        "NDN","TSL","POR","CAT","RAT","PIG","CATS", "MSC","PAH","PLEC","PIH","IVF","HRT",
+                                        "CI","OR","RR","CC","SNP","MDR","RNA","DNA","ISCI","LOD","CAD","PGP","ROC","CPE",
+                                        "MRI","CSM","HIV","HPV", "SDS","PAGE","SAGE", "FIGO", "ADO","PCR","QPCR","IVH","OI",
+                                        "ROP","OS","RDS","BPD","ROP","AIM","THE", "PGD","ADO","SDS","PLEC","HUVEC","ERA",
+                                        "SPARC","FOR","THE","BCM","HEEC","MSC","LNG","AMP","CERTL","DDT","ANOVA","COCP","MIAC",
+                                        "BAD","PRL","PGF","TERT","CAC","CTC","TTC","ISH","ECS","ESC","MPA","CGB","CGA","EVT"))
+        # almost all above mentioned acronyms are included in gene-name TRANSLATOR file and thus can be detected via their "long-name"
+        #hg[which(hg$HUGO %in% restricted_acronyms),]
+        # congenital disorder of glycosylation (CDG) #IAI = intraamniotic infection # OI = Osteogenesis Imperfecta
+        
+        
+
+        
+cumm1=NULL  # cummulation of potential gene names extracted from abstracts without TRANSLATOR
+cumm2=NULL  # cummulation of REAL gene names extracted from abstracts using TRANSLATOR
+cumm3=NULL  # cummulation of ALL unique-in-one-abstract gene names (ddtected with or without translator). for "times-mentioned" threshold
+
+
+### perform cycling through abstracts with gene-name extraction procedure
+for (j in 1:length(raw.txt)) { # takes a while...
+        print(paste(j,"/",length(raw.txt),sep=""))
         # this is the text that we will be working with in this cycle
         txt=raw.txt[j]
         
-        ##  use the TRANSLATOR to EXTARCT (!) gene names that are written in a non-standard manner
+        ##  use the TRANSLATOR to EXTARCT (!) gene names that are written in a non-standard manner ("long-format")
         replaced = NULL
         for (t in 1:dim(translator)[1]) { # note that the order of translator is important. longer entries first!
                 regexp_phrase = paste("([[:punct:]]|\\s)+", translator[t,"from"] ,"([[:punct:]]|\\s)+",sep="")
@@ -209,20 +235,26 @@ for (j in 1:length(raw.txt)) {
                 rm(regexp_phrase)
         }
 
-        # remove all possible punctuation marks, bt preserve the hyphen
+        # remove all possible punctuation marks, but preserve the hyphen
         txt=paste(unlist(strsplit(txt,"-")),collapse="zzzzz") # "zubiquitilation of hyphens"
         txt=paste(unlist(strsplit(txt,"[[:punct:]]")),collapse=" ")
         txt=paste(unlist(strsplit(txt,"zzzzz")),collapse="-")
         
         # extract all remaining POTENTIAL gene names
         lst1=unlist(regmatches(txt, gregexpr('([[:punct:]]|[[:upper:]]|[0-9])+', txt)))
-        lst1=unlist(regmatches(lst1, gregexpr('^[[:upper:]]{2,20}.*', lst1)))
-        lst1 = sort(unique(lst1))
-        lst1 = lst1[which(!lst1 %in% "REPLACED")]
+        lst2=unlist(regmatches(lst1, gregexpr('^[[:upper:]]{2,20}.*', lst1)))
+        lst2 = sort(unique(lst2))
+        lst2 = lst2[which(! lst2 %in% "REPLACED")]  # do not include artifacts
 
-        cumm1=c(cumm1,unique(lst1))
+        # ELIMINATE GENES THAT ARE EASILY CONFUSED WITH THE TERMS FROM OBSTETRIC/MEDICAT/TECHNICAL FIELDS
+        
+        # eliminate from the first set
+        lst3 = lst2[which(! lst2 %in% restricted_acronyms)]
+        
+        cumm1=c(cumm1,unique(lst3))
         cumm2=c(cumm2,unique(replaced))
-        rm(txt,lst1,replaced)
+        cumm3=c(cumm3,unique(c(lst3,replaced))) # will be used to estimate number of instances when a gene was mentioned
+        rm(txt,lst1,lst2,lst3,replaced)
 }
 
 
@@ -233,45 +265,32 @@ hist(as.numeric(table(genes_1)),breaks=100,col="grey")
 
 # detected via TRANSLATOR genes
 genes_2 = cumm2[which(cumm2 %in% hg_genes)]
-#hist(as.numeric(table(genes_2)),breaks=100,col="grey")
+hist(as.numeric(table(genes_2)),breaks=100,col="grey")
 #genes_2 = sort(unique(genes_2))
+
+# detected via BOTH METHODS
+genes_3 = cumm3[which(cumm3 %in% hg_genes)]
+hist(as.numeric(table(genes_3)),breaks=100,col="grey")
+#genes_3 = sort(unique(genes_3))
 
 library(gplots)
 temp = list(extracted = genes_1,translated = genes_2)
 venn(temp); rm(temp)
 
-# ELIMINATE GENES (from the genes_1 set) THAT ARE EASILY CONFUSED WITH THE TERMS FROM OBSTETRIC FIELD
-# define dangerous gene names that are also biomed acronyms
-restricted_acronyms = unique(c( "AGA","SGA","LGA","FGR","AFD","ART","DMP","GO","IUGR","FGR","MC","DC","ECM","CDG",
-                                "SPTB","PTL","WAS","FTL","BPD","RDS","PTD","PTB","PROM","PPROM","PTL","CPHD","IAI",
-                                "NDN","TSL","POR","CAT","RAT","PIG","CATS", "MSC","PAH","PLEC","PIH","IVF","HRT",
-                                "CI","OR","RR","CC","SNP","MDR","RNA","DNA","ISCI","LOD","CAD","PGP","ROC","CPE",
-                                "MRI","CSM","HIV","HPV", "SDS","PAGE","SAGE", "FIGO", "ADO","PCR","QPCR","IVH","OI",
-                                "ROP","OS","RDS","BPD","ROP","AIM","THE", "PGD","ADO","SDS","PLEC","HUVEC","ERA",
-                                "SPARC","FOR","THE","BCM","HEEC","MSC","LNG","AMP","CERTL","DDT","ANOVA","COCP","MIAC",
-                                "BAD","PRL","PGF","TERT","CAC","CTC","TTC","ISH","ECS","ESC","MPA","CGB","CGA","EVT"))
-# all above mentioned acronyms are included in gene-name TRANSLATOR file and thus can be detected via their "long-name"
-#hg[which(hg$HUGO %in% restricted_acronyms),]
-
-
-# congenital disorder of glycosylation (CDG)
-#IAI - intraamniotic infection
-#Osteogenesis Imperfecta
-#MIAC
-
-# eliminate from the first set
-genes_1 = genes_1[which( ! genes_1 %in% restricted_acronyms)]
-
 # all together
-if (length(genes_2)==0) {genes = sort(genes_1)} else {genes=sort(c(genes_1,genes_2))}
+#if (length(genes_2)==0) {genes = sort(genes_1)} else {genes=sort(c(genes_1,genes_2))}
+genes = genes_3
 
 temp1=data.frame(gene=names(table(genes)),freq=as.numeric(table(genes)),stringsAsFactors = F)
 temp2= merge(temp1,hg,by.x="gene",by.y="HUGO",all.x=T); rm(temp1)
 gene.freq=temp2[rev(order(temp2$freq)),]; rm(temp2)
 #gene.freq[1:20,]
 gene_lists[[phe]]=gene.freq
-rm(gene.freq, genes, genes_1,genes_2, cumm1,cumm2)
+rm(gene.freq, genes, genes_1,genes_2, cumm1,cumm2,cumm3)
+
 } # end of cycling through various phenotypes
+
+
 
 
 

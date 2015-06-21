@@ -126,7 +126,10 @@ inhibin beta	INHBA
 kynureninase	KYNU
 lipocortin I	ANXA1
 connexin-37	GJA4
+transferrin	TF
+Transferrin	TF
 flotillin-1	FLOT1
+flotillin 1	FLOT1
 GADD45gamma	GADD45G
 P45017alpha	CYP17A1
 TGF-beta(2)	TGFB2
