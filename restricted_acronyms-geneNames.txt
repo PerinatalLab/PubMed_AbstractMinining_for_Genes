@@ -1,0 +1,103 @@
+## Dangerous (potential)gene names that are also biomed acronyms.
+## These should not be used when trying to pickup the gene names from abstracts.
+## Majority of these acronyms are included in gene-name TRANSLATOR file and thus ..
+## ..can be detected via their "long-name". It is important to constantly update..
+## ..expand both this list and the TRANSLATOR file.   (by Jonas. 2015 June)
+Acronym	Description
+AGA	Apropriate for Gestational Age
+SGA	Small for Gestational Age
+LGA	Large for Gestational Age
+FGR	Fetal Growth Retardation
+AFD	.
+ART	.
+DMP	.
+GO	.
+IUGR	IntraUterine Growth Restriction
+MC	.
+DC	.
+ECM	.
+CDG	Congenital Disorder of Glycosylation
+SPTB	Spontaneous Preterm Birth
+PTL	Preterm Labor
+WAS	.
+FTL	.
+BPD	.
+RDS	.
+PTD	Preterm Delivery
+PTB	Preterm Birth
+PROM	Premature Rupture of Membranes
+PPROM	Preterm Premature Rupture of Membranes
+CPHD	.
+IAI	IntraAmniotic Infection
+NDN	.
+TSL	.
+POR	.
+CAT	.
+RAT	.
+PIG	.
+CATS	.
+MSC	.
+PAH	.
+PLEC	.
+PIH	.
+IVF	InVitro Fertilisation
+HRT	.
+CI	Confidence Intervals
+OR	Odds RAtio
+RR	Risk Ratio
+CC	.
+SNP	Single Nucleotide Polymorphism
+MDR	.
+RNA	.
+DNA	.
+ISCI	.
+LOD	.
+CAD	.
+PGP	.
+ROC	.
+CPE	.
+MRI	.
+CSM	.
+HIV	Human Immunodeficiency Virus
+HPV	.
+SDS	SodiumDodecyl Sulphate
+PAGE	PolyAcrylamyde Gel..
+SAGE	.
+FIGO	.
+ADO	.
+PCR	.
+QPCR	Quantitative PCR
+IVH	.
+OI	Osteogenesis Imperfecta
+ROP	.
+OS	.
+AIM	.
+THE	.
+PGD	.
+HUVEC	.
+ERA	.
+SPARC	.
+FOR	.
+BCM	.
+HEEC	.
+LNG	.
+AMP	.
+CERTL	.
+DDT	DichlorDiphenylTrichlorMethylMethane
+ANOVA	Analysis Of Variance
+COCP	.
+MIAC	.
+BAD	.
+PRL	.
+PGF	.
+TERT	.
+CAC	.
+CTC	.
+TTC	.
+ISH	.
+ECS	.
+ESC	.
+MPA	.
+CGB	.
+CGA	.
+EVT	.
