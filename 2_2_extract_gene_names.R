@@ -75,7 +75,7 @@ cumm3=NULL  # cummulation of ALL unique-in-one-abstract gene names (ddtected wit
 ### perform cycling through abstracts with gene-name extraction procedure
 for (j in 1:length(raw.txt)) { # takes a while... quite a big one
                 
-        print(paste(j,"/",length(raw.txt),sep=""))
+        #print(paste(j,"/",length(raw.txt),sep=""))
         # this is the text that we will be working with in this cycle
         txt=raw.txt[j]
         
@@ -152,11 +152,11 @@ rm(gene.freq, genes, genes_1,genes_2, cumm1,cumm2,cumm3,obj_name)
 # also store the version (version-control) identificator (hash)
 hash = system("git log --pretty=format:'%h' -n 1",intern=TRUE)
 gene_lists[["hash"]] = hash
+#gene_lists$hash
 
 # save the R object with results 
 result_dir = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/" 
 save(list=c("gene_lists"),file=paste(result_dir,"PubMed_extracted_genes.RData",sep=""))
-
 
 
 
