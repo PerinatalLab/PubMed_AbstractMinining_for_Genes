@@ -34,11 +34,10 @@ restricted_acronyms = sort(unique(acronyms_tbl$Acronym))
 
 
 # load what was generated in previous script (cleaned abstracts)
-out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_PRUNE/"
-load(paste(out_dir,"cleaned_abstracts.RData",sep=""))
+out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jul/PubMed_PRUNE/"
+load(paste(out_dir,"cleaned_abstracts_OBSTETRICS.RData",sep=""))
 
-
-phenotypes = names(cleaned_abstracts_exclusivityON)
+phenotypes = names(cleaned_abstracts)
 phenotypes = phenotypes[which(phenotypes != "stats")]
 
 gene_lists = list() # here tables of gene-freqs for all phenotypes will be accumulated
