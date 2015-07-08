@@ -6,7 +6,7 @@ in_file_name=$1
 out_file_prfx=$2
 
 # this directory is on WS2 computer (due to gawk)
-data_dir=/home/jonas/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jul/
+data_dir=/home/jonas/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/
 
 PubMed_results=${data_dir}/PubMed_RAW/${in_file_name} # downloaded from PubMed
 PubMed_edited=${data_dir}/PubMed_DIGEST/temporary_file.txt
