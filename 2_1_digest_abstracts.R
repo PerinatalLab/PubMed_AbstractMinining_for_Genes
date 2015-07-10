@@ -26,7 +26,7 @@ diseases2 = tolower(diseases1) # "ignore-case" option in grep will be used anywa
 diseases = sort(unique(diseases2))
 
 ##  get the list of animal-related terms that should not be in the abstracts (non-human subjects)
-anim1 = read.table("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/animal_name_indicators.txt",
+anim1 = read.table("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/animal_name_indicators.txt",
                    stringsAsFactors = F,h=F,sep="\t")
 anim1=sort(unique(tolower(anim1[,1])))
 anim2 = unique(c("animal","cattle","buffalo","ruminant", "cow","dog","rat","pig","cat","lion","horse","monkey","mouse",
@@ -34,9 +34,10 @@ anim2 = unique(c("animal","cattle","buffalo","ruminant", "cow","dog","rat","pig"
 animals=sort(unique(c(anim1,anim2))); rm(anim1,anim2)
 
 
-PubMedDir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_DIGEST/"
-file_list = list.files(PubMedDir,pattern="PLACEN|CERVIX|MYOMETR|ENDOMETR|UTER")  # pregnancy-related genes  ***
+PubMedDir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/PubMed_DIGEST/"
+#file_list = list.files(PubMedDir,pattern="PLACEN|CERVIX|MYOMETR|ENDOMETR|UTER")  # pregnancy-related genes  ***
 #file_list = list.files(PubMedDir,pattern="PENILE|BLADD|BONE|DENTAL|PROSTAT|TRACHE")  # control set of genes (other tissues) ***
+file_list = list.files(PubMedDir,pattern="SKIN|INTESTIN|MUSCLE|HEART|LIVER|LUNG")  # control set of genes (other tissues) ***
 files_ok = file_list[grep("abstracts",file_list)]
 pheno=NULL; for (i in 1:length(files_ok))pheno = c(pheno, unlist(strsplit(files_ok[i],"_"))[4]); print(pheno)
 
@@ -81,6 +82,15 @@ for (exclusivity_pruning in c(TRUE,FALSE)) {
                         if (phe=="PENILE") regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|([[:punct:]]|\\s)+dent|prostat|trachea[ao]"
                         if (phe=="PROSTATE") regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|([[:punct:]]|\\s)+dent|penile|trachea[ao]"
                         if (phe=="TRACHEA") regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|([[:punct:]]|\\s)+dent|penile|prostat"
+                       
+                        if (phe=="HEART") regexp_not="([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|([[:punct:]]|\\s)+dent|penile|prostat|trachea[ao]"
+                        if (phe=="INTESTINE") regexp_not="bladder|([[:punct:]]|\\s)+dent|penile|prostat|trachea[ao]"
+                        if (phe=="LIVER") regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|penile|prostat|trachea[ao]"
+                        if (phe=="LUNGS") regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|([[:punct:]]|\\s)+dent|prostat|trachea[ao]"
+                        if (phe=="MUSCLE") regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|([[:punct:]]|\\s)+dent|penile|trachea[ao]"
+                        if (phe=="SKIN") regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|([[:punct:]]|\\s)+dent|penile|prostat"
+                        
+                        
                         print(regexp_not)
                         
                         ## decide now whether ou want to use exclusivity filter or not
@@ -182,6 +192,8 @@ for (exclusivity_pruning in c(TRUE,FALSE)) {
         }
 }
 
+
+
 cleaned_abstracts_exclusivityON[["stats"]] = stats_excl_ON
 cleaned_abstracts_exclusivityOFF[["stats"]] = stats_excl_OFF
 
@@ -193,6 +205,6 @@ save(list=c("cleaned_abstracts_exclusivityON","cleaned_abstracts_exclusivityOFF"
 rm(list=ls())
 
 # load what was generated (cleaned)
-out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_PRUNE/"
+out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/PubMed_PRUNE/"
 load(paste(out_dir,"cleaned_abstracts.RData",sep=""))
 
