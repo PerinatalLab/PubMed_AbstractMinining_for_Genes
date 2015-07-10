@@ -1,12 +1,13 @@
 #!/bin/bash
 
 # this script is controlled by a master-script written in R
+# written by Julius
 
 in_file_name=$1
 out_file_prfx=$2
 
 # this directory is on WS2 computer (due to gawk)
-data_dir=/home/jonas/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/
+data_dir="./"
 
 PubMed_results=${data_dir}/PubMed_RAW/${in_file_name} # downloaded from PubMed
 PubMed_edited=${data_dir}/PubMed_DIGEST/temporary_file.txt
