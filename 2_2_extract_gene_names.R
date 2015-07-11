@@ -24,7 +24,7 @@ hg_genes=hg[which(nchar(hg$HUGO)>1),"HUGO"]; length(hg_genes) # 2 = arguably too
 #hg[which(nchar(ltrs)==1),1:5]
 
 # load dangerous gene names that are also biomed acronyms
-acronym_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/"
+acronym_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/"
 acronyms_tbl = read.table(paste(acronym_dir,"restricted_acronyms-geneNames.txt",sep=""),
                           sep="\t",h=T,stringsAsFactors=F)
 restricted_acronyms = sort(unique(acronyms_tbl$Acronym))
@@ -34,19 +34,19 @@ restricted_acronyms = sort(unique(acronyms_tbl$Acronym))
 
 
 # load what was generated in previous script (cleaned abstracts)
-out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_PRUNE/"
+out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/PubMed_PRUNE/"
 load(paste(out_dir,"cleaned_abstracts.RData",sep=""))
 
 
-phenotypes = names(cleaned_abstracts_exclusivityON)
-phenotypes = phenotypes[which(phenotypes != "stats")]
+phenotypes = names(cleaned_abstracts_exclusivityON)  # assumption!  both files have the same phenotypes
+phenotypes = phenotypes[-grep("stats|HEART",phenotypes)]
 
 gene_lists = list() # here tables of gene-freqs for all phenotypes will be accumulated
 
 # cycle through various combinations of phenotypes/methods
 for (phenotype in phenotypes) {
-        for (exclusivity in c("xcl","nxc")) {
-                for (translation in c("trn","unt")) {
+        for (exclusivity in c("xcl","nxc")[1]) {
+                for (translation in c("trn","unt")[1]) {
                         
                         # report
                         obj_name = paste(phenotype,exclusivity,translation,sep="_")
@@ -59,7 +59,7 @@ for (phenotype in phenotypes) {
         
         # DECISION WHETHER TRANSLATOR should be used
         if (translation=="trn") {
-                transl_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/"
+                transl_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/"
                 translator = read.table(paste(transl_dir,"TRANSLATOR_misspelled_gene_names.txt",sep=""),
                                         stringsAsFactors=F,h=T,sep="\t")# TRANSLATOR OF SOME (!) GENE NAMES
                 from_length = nchar(translator$from)
@@ -149,14 +149,15 @@ rm(gene.freq, genes, genes_1,genes_2, cumm1,cumm2,cumm3,obj_name)
 }
 }
 
+
 # also store the version (version-control) identificator (hash)
 hash = system("git log --pretty=format:'%h' -n 1",intern=TRUE)
 gene_lists[["hash"]] = hash
 #gene_lists$hash
 
 # save the R object with results 
-result_dir = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/" 
-save(list=c("gene_lists"),file=paste(result_dir,"PubMed_extracted_genes.RData",sep=""))
+result_dir = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/WORK_FILES/" 
+save(list=c("extra_gene_lists"),file=paste(result_dir,"extra_PubMed_extracted_genes.RData",sep=""))
 
 
 
@@ -177,69 +178,16 @@ temp=list(bladder = gene_lists$BLADDER$gene,bone=gene_lists$BONE$gene,
           trachea = gene_lists$TRACHEA$gene)
 venn(temp)
 
+# for control-set of tissues/phenotypes
+library(gplots)
+temp=list(intest = gene_lists$INTESTINE_xcl_trn$gene,liver=gene_lists$LIVER_xcl_trn$gene,
+          lungs = gene_lists$LUNGS_xcl_trn$gene,skin = gene_lists$SKIN_xcl_trn$gene,
+           muscle= gene_lists$MUSCLE_xcl_trn$gene)
+venn(temp)
 
 
 
-################################################################
-################################################################
-################################################################
-################################################################
 
-......      not finished below   .........
-
-#############   EXTARCT OVERLAPING AND UNIQUE GENES for each phenotype
-all_genes = list()
-individual = list()
-phenos =  c("CERVIX","ENDOMETRIUM","MYOMETRIUM","UTERINE","PLACENTA")
-for (pheno in phenos) {
-#pheno = "CERVIX"
-phes = phenos[phenos != pheno]
-lll = NULL; for (phe in phes) lll=c(lll, unlist(gene_lists[[phe]]$gene))
-ooo = gene_lists[[pheno]]$gene
-individual[[pheno]] = ooo[which( ! ooo %in% sort(unique(lll)))]
-all_genes[[pheno]] = unique(unlist(ooo))
-rm(lll,ooo,phes)
-}
-all_unq =  unique(unlist(individual)) 
-all_genes = unique(unlist(all_genes))
-common = unique(all_genes[ ! all_genes %in% all_unq ])
-
-
-new_collection=NULL
-for (i in 1:(length(phenos)+1))  {
-        if (i<=length(phenos)) {
-        #        i=1
-        gene_names = data.frame(V1 = unique(individual[[phenos[i]]]))
-        m = merge(hg , gene_names, by.x= "HUGO" ,by.y= "V1", all= F)
-        temp = data.frame(ENTREZ= m$ENTREZ, GENESET = paste("PubMed:",phenos[i],sep=""),Descript=".")
-        new_collection = rbind(new_collection,temp)
-        rm(temp,m,gene_names)
-        } else {
-                gene_names = data.frame(V1 = unique(common))
-                m = merge(hg , gene_names, by.x= "HUGO" ,by.y= "V1", all= F)
-                temp = data.frame(ENTREZ= m$ENTREZ, GENESET = "PubMed:common",Descript=".")
-                new_collection = rbind(new_collection,temp)
-                rm(temp,m,gene_names)
-        }
-}
-
-dim(new_collection); head(new_collection)
-table(new_collection$GENESET)
-table(collection$GENESET)
-new_printout=new_collection
-colnames(new_printout)[1]=paste("##",colnames(new_printout)[1],sep="")
-write.table(new_printout,"~/Biostuff/MOBA_GESTAGE_GWAS/INRICH/PubMed_OBGYN_5tissuesUnqComm.txt",
-            row.names=F,col.names=T,sep="\t",quote=F)
-
-table(new_collection$GENESET)
-
-
-my_genes = c("SP3", "SLC1A1", "TLR4", "IGF2", "MMP9" ,"EDN3")
-colnames(new_collection)[1]="ENTREZ"
-ggg=data.frame(V1=new_collection$ENTREZ[which(new_collection$GENESET=="PubMed:ENDOMETRIUM")])
-mmm = merge(hg , ggg, by.x= "ENTREZ" ,by.y= "V1", all= F)
-my_genes %in% mmm$HUGO
-my_genes %in% common
 
 
 

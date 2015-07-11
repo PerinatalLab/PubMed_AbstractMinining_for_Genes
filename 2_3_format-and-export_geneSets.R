@@ -6,23 +6,27 @@
 rm(list=ls())  # cleanup
 
 ### option for the pregnancy-related of phenotypes(tissues) ***
-load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/obgn_genes.RData")
-load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/cntrl_genes.RData")
+load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/WORK_FILES/obgn_genes.RData")
+load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/WORK_FILES/cntrl_genes.RData")
+load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/WORK_FILES/extra_PubMed_extracted_genes.RData")
+
 lst=ls()
-obj_lst = lst[grep("^obg_.{7,7}$|^ctrl_.{7,7}$",lst)]  # gene frequencies per each phenotype/tissue
+obj_lst = lst[grep("^extra_gene_lists$|^ctrl_.{7,7}$|^obg_.{7,7}$",lst)]  # gene frequencies per each phenotype/tissue. choose   ***
 
 ### option for the control-set of phenotypes(tissues) ***
 #load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/WORK_FILES/cntrl_genes.RData")
 #lst=ls()
 #obj_lst = lst[grep("^ctrl_.{7,7}$|^ctrl_.{7,7}$",lst)]  # gene frequencies per each phenotype/tissue
+#obj_lst = lst[grep("extra_gene",lst)]  # gene frequencies per each phenotype/tissue
 
 COLLECTOR = NULL
 for (z in 1:length(obj_lst)) {  # for each type of settings
+z=3
         temp_obj = get(obj_lst[z])
         types = names(temp_obj)
         
         # optional (depending on whether we want to include everything or only relevant)   ***
-        types = types[ which( !types %in% c("PLACENTA","DENTAL","TRACHEA"))]  # suppress or leave 
+        types = types[ which( !types %in% c("PLACENTA","DENTAL","TRACHEA","hash"))]  # suppress or leave 
         
         collector = NULL
         for (type in types) { # for each type of tissue
@@ -40,7 +44,8 @@ for (z in 1:length(obj_lst)) {  # for each type of settings
         rm(collector, types, temp_obj)
 }
 
-        folder = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/PubMed_GENES/"
+
+        folder = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/PubMed_GENES/"
         colnames(COLLECTOR)[1]=paste("##",colnames(COLLECTOR)[1],sep="")
         file_name = paste(folder,"PubMed_geneSets_forINRICH_GYNECOLOGYandCONTROL.txt",sep="")
         write.table(COLLECTOR,file_name,row.names=F,col.names=T,sep="\t",quote=F)
