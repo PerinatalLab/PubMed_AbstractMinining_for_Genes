@@ -142,7 +142,7 @@ stats =  NULL # cummulator of cleaning summary stats
 cleaned_abstracts[["stats"]] = stats
 
 #  save what was generated (cleaned)
-out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jul_OBSTETRICS/PubMed_PRUNE/"
+out_dir="./PubMed_PRUNE/" #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jul_OBSTETRICS
 save(list=c("cleaned_abstracts"),file=paste(out_dir,"cleaned_abstracts_OBSTETRICS.RData",sep=""))
 
 rm(list=ls())
