@@ -1,3 +1,4 @@
+#!/usr/bin/Rscript
 
 # extract PubMed genes that are related to PREGNANCY (based on abstract mining)
 
@@ -10,8 +11,8 @@
 #rm(list=ls())
 
 # load the full collection human genes
-hg=read.table("~/Biostuff/hg19_HUMAN_GENES/ucsc_HUGO_ENTREZ_chr1-23_withDescriptions_hg19_PROCESSED.txt",
-              stringsAsFactors=F,h=F); dim(hg); head(hg); table(hg$V1)
+hg=read.table("ucsc_HUGO_ENTREZ_chr1-23_withDescriptions_hg19_PROCESSED.txt",
+              stringsAsFactors=F,h=F); dim(hg); head(hg); table(hg$V1) # ~/Biostuff/hg19_HUMAN_GENES/
 colnames(hg)=c("CHR","START","END","ENTREZ","HUGO","Description")
 hg_genes=hg[which(nchar(hg$HUGO)>1),"HUGO"]; length(hg_genes) # 2 = arguably too much risk with short gene names
 #hg[grep("IL+[1-2]{1,1}$",hg$HUGO),][1:10,]
@@ -24,9 +25,8 @@ hg_genes=hg[which(nchar(hg$HUGO)>1),"HUGO"]; length(hg_genes) # 2 = arguably too
 #hg[which(nchar(ltrs)==1),1:5]
 
 # load dangerous gene names that are also biomed acronyms
-acronym_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/"
-acronyms_tbl = read.table(paste(acronym_dir,"restricted_acronyms-geneNames.txt",sep=""),
-                          sep="\t",h=T,stringsAsFactors=F)
+#acronym_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/"
+acronyms_tbl = read.table("restricted_acronyms-geneNames.txt",sep="\t",h=T,stringsAsFactors=F)
 restricted_acronyms = sort(unique(acronyms_tbl$Acronym))
 # majority of acronyms are present in the gene-name TRANSLATOR file..
 # .. and thus can be detected via their "long-name"
@@ -34,8 +34,8 @@ restricted_acronyms = sort(unique(acronyms_tbl$Acronym))
 
 
 # load what was generated in previous script (cleaned abstracts)
-out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/PubMed_PRUNE/"
-load(paste(out_dir,"cleaned_abstracts.RData",sep=""))
+out_dir="./PubMed_PRUNE/" #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY
+load(paste(out_dir,"cleaned_abstracts_GYNECOLOGY.RData",sep=""))
 
 
 phenotypes = names(cleaned_abstracts_exclusivityON)  # assumption!  both files have the same phenotypes
@@ -59,8 +59,8 @@ for (phenotype in phenotypes) {
         
         # DECISION WHETHER TRANSLATOR should be used
         if (translation=="trn") {
-                transl_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/"
-                translator = read.table(paste(transl_dir,"TRANSLATOR_misspelled_gene_names.txt",sep=""),
+                #transl_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/"
+                translator = read.table("TRANSLATOR_misspelled_gene_names.txt",
                                         stringsAsFactors=F,h=T,sep="\t")# TRANSLATOR OF SOME (!) GENE NAMES
                 from_length = nchar(translator$from)
                 translator = translator[order(from_length,decreasing = T),]
@@ -156,15 +156,16 @@ gene_lists[["hash"]] = hash
 #gene_lists$hash
 
 # save the R object with results 
-result_dir = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/WORK_FILES/" 
-save(list=c("extra_gene_lists"),file=paste(result_dir,"extra_PubMed_extracted_genes.RData",sep=""))
+result_dir = "./PubMed_GENES/" #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/
+save(list=c("gene_lists"),file=paste(result_dir,"PubMed_extracted_genes_GYNECOLOGYandCONTROL.RData",sep=""))
 
+quit()
 
-
-...  needs a review below ...
 
 ############################################
 ###########   PREVIEW
+
+library(gplots)
 
 # for pregnancy-related genes
 temp=list(endom.=gene_lists$ENDOMETRIUM$gene,myom.=gene_lists$MYOMETRIUM$gene,
@@ -179,7 +180,7 @@ temp=list(bladder = gene_lists$BLADDER$gene,bone=gene_lists$BONE$gene,
 venn(temp)
 
 # for control-set of tissues/phenotypes
-library(gplots)
+
 temp=list(intest = gene_lists$INTESTINE_xcl_trn$gene,liver=gene_lists$LIVER_xcl_trn$gene,
           lungs = gene_lists$LUNGS_xcl_trn$gene,skin = gene_lists$SKIN_xcl_trn$gene,
            muscle= gene_lists$MUSCLE_xcl_trn$gene)

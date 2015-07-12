@@ -1,3 +1,4 @@
+#!/usr/bin/Rscript
 
 ########################################################################
 ########################################################################
@@ -5,10 +6,7 @@
 
 rm(list=ls())  # cleanup
 
-### option for the pregnancy-related of phenotypes(tissues) ***
-load("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/WORK_FILES/PubMed_extracted_genes.RData")
-
-names(gene_lists)
+load("./PubMed_GENES/PubMed_extracted_genes.RData") #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY
 
 types = names(gene_lists)
 
@@ -25,7 +23,7 @@ for (type in types) {  # for each type of settings
 dim(collector)
 head(collector)
 
-        folder = "~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/PubMed_GENES/"
+        folder = "./PubMed_GENES/" #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY
         colnames(collector)[1]=paste("##",colnames(collector)[1],sep="")
         file_name = paste(folder,"PubMed_geneSets_forINRICH_GYNECOLOGYandCONTROL.txt",sep="")
         write.table(collector,file_name,row.names=F,col.names=T,sep="\t",quote=F)
