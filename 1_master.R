@@ -2,11 +2,12 @@
 
 # passes arguments to the bash script that takes care of PubMed abstracts
 
-
+setwd("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jul")
 bash_script = "./1_extract_Abstracts_from_PubMed_output.sh"
 
 # abstracts that are downloaded from PubMed
 file_list = list.files("./PubMed_RAW/")
+
 
 for (i in 1:length(file_list)) {
         file_name = file_list[i]
