@@ -13,8 +13,7 @@
 
 ###  get typical disease-names from definitions in ICD-code-file 
 #    .. (in order to get rid of abstracts with other diseases)
-txt = read.table("~/Biostuff/ICD-9-CM-v32-master-descriptions/CMS32_DESC_SHORT_DX.txt",
-                 h=F,sep="\t",stringsAsFactors = F)
+txt = read.table("CMS32_DESC_SHORT_DX.txt",h=F,sep="\t",stringsAsFactors = F) #~/Biostuff/ICD-9-CM-v32-master-descriptions/
 all_words=NULL  # takes about 5 seconds
 for (i in 1:dim(txt)[1]) {
         lst1=unlist(regmatches(txt[i,1], gregexpr("[A-Za-z]+", txt[i,1])))
