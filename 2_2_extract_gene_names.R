@@ -45,8 +45,8 @@ gene_lists = list() # here tables of gene-freqs for all phenotypes will be accum
 
 # cycle through various combinations of phenotypes/methods
 for (phenotype in phenotypes) {
-        for (exclusivity in c("xcl","nxc")[1]) {
-                for (translation in c("trn","unt")[1]) {
+        for (exclusivity in c("xcl","nxc")) {
+                for (translation in c("trn","unt")) {
                         
                         # report
                         obj_name = paste(phenotype,exclusivity,translation,sep="_")
