@@ -26,16 +26,16 @@ diseases2 = tolower(diseases1) # "ignore-case" option in grep will be used anywa
 diseases = sort(unique(diseases2))
 
 ##  get the list of animal-related terms that should not be in the abstracts (non-human subjects)
-anim1 = read.table("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/animal_name_indicators.txt",
-                   stringsAsFactors = F,h=F,sep="\t")
+anim1 = read.table("animal_name_indicators.txt",stringsAsFactors = F,h=F,sep="\t") #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/
 anim1=sort(unique(tolower(anim1[,1])))
 anim2 = unique(c("animal","cattle","buffalo","ruminant", "cow","dog","rat","pig","cat","lion","horse","monkey","mouse",
                  "cows","dogs","rats","pigs","cats","lions","horses","monkeys","mice"))
 animals=sort(unique(c(anim1,anim2))); rm(anim1,anim2)
 
 
-PubMedDir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/PubMed_DIGEST/"
-file_list = list.files(PubMedDir,pattern="PLACEN|CERVIX|MYOMETR|ENDOMETR|UTER|PENILE|BLADD|BONE|PROSTAT|SKIN|INTESTIN|MUSCLE|LIVER|LUNG")  # control set of genes (other tissues) ***
+PubMedDir="./PubMed_DIGEST/" #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY
+pttrn = "PLACEN|CERVIX|MYOMETR|ENDOMETR|UTER|PENILE|BLADD|BONE|PROSTAT|SKIN|INTESTIN|MUSCLE|LIVER|LUNG"
+file_list = list.files(PubMedDir,pattern=pttrn)
 files_ok = file_list[grep("abstracts",file_list)]
 pheno=NULL; for (i in 1:length(files_ok))pheno = c(pheno, unlist(strsplit(files_ok[i],"_"))[4]); print(pheno)
 
@@ -189,13 +189,13 @@ cleaned_abstracts_exclusivityON[["stats"]] = stats_excl_ON
 cleaned_abstracts_exclusivityOFF[["stats"]] = stats_excl_OFF
 
 #  save what was generated (cleaned)
-out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/PubMed_PRUNE/"
+out_dir="./PubMed_PRUNE/" #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY
 save(list=c("cleaned_abstracts_exclusivityON","cleaned_abstracts_exclusivityOFF"),
-     file=paste(out_dir,"cleaned_abstracts.RData",sep=""))
+     file=paste(out_dir,"cleaned_abstracts_GYNECOLOGY.RData",sep=""))
 
 rm(list=ls())
 
 # load what was generated (cleaned)
-out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/PubMed_PRUNE/"
-load(paste(out_dir,"cleaned_abstracts.RData",sep=""))
+#out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/PubMed_PRUNE/"
+#load(paste(out_dir,"cleaned_abstracts_GYNECOLOGY.RData",sep=""))
 
