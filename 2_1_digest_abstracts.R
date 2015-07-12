@@ -1,14 +1,15 @@
+#!/usr/bin/Rscript
 
-
-# description: extracts/mines PubMed abstracts that are related to PREGNANCY 
+# description: extracts/mines PubMed abstracts that are related to PREGNANCY (OBSTETRICS) 
 # but are not biased by animal studies and are +/- unique to the specific tissue
-
 
 # 1) search the PubMed website with code words **process**  AND **gene**
 # 2) download the text file
 # 3) run Julius' script that that awk-eliminates everything except abstracts
 # 4) run this script that further prunes/cleanes abstracts 
 
+
+#setwd("/Users/jb/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jul_OBSTETRICS/")
 
 ###  get typical disease-names from definitions in ICD-code-file 
 #    .. (in order to get rid of abstracts with other diseases)
@@ -26,19 +27,15 @@ diseases2 = tolower(diseases1) # "ignore-case" option in grep will be used anywa
 diseases = sort(unique(diseases2))
 
 ##  get the list of animal-related terms that should not be in the abstracts (non-human subjects)
-anim1 = read.table("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun/animal_name_indicators.txt",
-                   stringsAsFactors = F,h=F,sep="\t")
+anim1 = read.table("animal_name_indicators.txt",stringsAsFactors = F,h=F,sep="\t") #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun
 anim1=sort(unique(tolower(anim1[,1])))
 anim2 = unique(c("animal","cattle","buffalo","ruminant", "cow","dog","rat","pig","cat","lion","horse","monkey","mouse",
                  "cows","dogs","rats","pigs","cats","lions","horses","monkeys","mice"))
 animals=sort(unique(c(anim1,anim2))); rm(anim1,anim2)
 
-
-PubMedDir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jul/PubMed_DIGEST/"
-#    choose which ****
-file_list = list.files(PubMedDir, pattern="gestation|parturition|preterm|pregnancy")  # pregnancy/obstetrics-related genes  ***
-file_list = list.files(PubMedDir,pattern="addi|agei|blinz|deaf|endoc|hemat|malab|nutri|slee|anxi|diges|hear|mental|visio")  # control set of genes (other tissues) ***
-
+PubMedDir="./PubMed_DIGEST/" #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jul
+pttrn = "gest|partu|prete|pregn|addic|agei|blind|deaf|endoc|hemat|malab|nutri|sleep|anxi|digest|hear|mental|visio"
+file_list = list.files(PubMedDir, pattern=pttrn)
 files_ok = file_list[grep("abstracts",file_list)]
 pheno=NULL; for (i in 1:length(files_ok))pheno = c(pheno, unlist(strsplit(files_ok[i],"_"))[1]); print(pheno)
 
@@ -145,13 +142,13 @@ stats =  NULL # cummulator of cleaning summary stats
 cleaned_abstracts[["stats"]] = stats
 
 #  save what was generated (cleaned)
-out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jul/PubMed_PRUNE/"
+out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jul_OBSTETRICS/PubMed_PRUNE/"
 save(list=c("cleaned_abstracts"),file=paste(out_dir,"cleaned_abstracts_OBSTETRICS.RData",sep=""))
 
 rm(list=ls())
 
 
 # load what was generated (cleaned)
-out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jul/PubMed_PRUNE/"
-load(paste(out_dir,"cleaned_abstracts_OBSTETRICS.RData",sep=""))
+#out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jul_OBSTETRICS/PubMed_PRUNE/"
+#load(paste(out_dir,"cleaned_abstracts_OBSTETRICS.RData",sep=""))
 
