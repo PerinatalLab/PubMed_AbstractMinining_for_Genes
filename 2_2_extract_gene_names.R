@@ -34,12 +34,12 @@ restricted_acronyms = sort(unique(acronyms_tbl$Acronym))
 
 
 # load what was generated in previous script (cleaned abstracts)
-out_dir="./PubMed_PRUNE/" #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY
-load(paste(out_dir,"cleaned_abstracts_GYNECOLOGY.RData",sep=""))
+out_dir="./PubMed_PRUNE/" #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Aug_FETAL
+load(paste(out_dir,"cleaned_abstracts_FETAL.RData",sep=""))
 
 
 phenotypes = names(cleaned_abstracts_exclusivityON)  # assumption!  both files have the same phenotypes
-phenotypes = phenotypes[-grep("stats|HEART",phenotypes)]
+#phenotypes = phenotypes[-grep("stats|HEART",phenotypes)]
 
 gene_lists = list() # here tables of gene-freqs for all phenotypes will be accumulated
 
@@ -59,9 +59,8 @@ for (phenotype in phenotypes) {
         
         # DECISION WHETHER TRANSLATOR should be used
         if (translation=="trn") {
-                #transl_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/"
                 translator = read.table("TRANSLATOR_misspelled_gene_names.txt",
-                                        stringsAsFactors=F,h=T,sep="\t")# TRANSLATOR OF SOME (!) GENE NAMES
+                                stringsAsFactors=F,h=T,sep="\t")# TRANSLATOR OF SOME (!) GENE NAMES
                 from_length = nchar(translator$from)
                 translator = translator[order(from_length,decreasing = T),]
         } else { translator = data.frame(from="111111",to="222222",stringsAsFactors = F) }

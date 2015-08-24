@@ -2,12 +2,12 @@
 
 # passes arguments to the bash script that takes care of PubMed abstracts
 
-setwd("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY")
+setwd("~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Aug_FETAL/")
 bash_script = "./1_extract_Abstracts_from_PubMed_output.sh"
 
 # abstracts that are downloaded from PubMed
 file_list1 = list.files("./PubMed_RAW/")
-file_list = file_list1[grep("SKIN|INTEST|MUSCL|HEART|LIVER|LUNG",file_list1)]
+file_list = file_list1[grep("AMNION|CHORION|FETUS|PLACENTA",file_list1)]
 
 
 # naming convention:  PubMed_webSearch_RAW_CERVIX_GENES_2014Jun17_n1362.txt

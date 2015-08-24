@@ -1,6 +1,6 @@
 #!/usr/bin/Rscript
 
-# description: extracts/mines PubMed abstracts that are related to PREGNANCY 
+# description: extracts/mines PubMed abstracts that are related to FETUS/EMBRYO 
 # but are not biased by animal studies and are +/- unique to the specific tissue
 
 
@@ -33,7 +33,7 @@ animals=sort(unique(c(anim1,anim2))); rm(anim1,anim2)
 
 
 PubMedDir="./PubMed_DIGEST/" #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY
-pttrn = "PLACEN|CERVIX|MYOMETR|ENDOMETR|UTER|PENILE|BLADD|BONE|PROSTAT|SKIN|INTESTIN|MUSCLE|LIVER|LUNG"
+pttrn = "PLACENT|AMNION|CHORION|FETUS"
 file_list = list.files(PubMedDir,pattern=pttrn)
 files_ok = file_list[grep("abstracts",file_list)]
 pheno=NULL; for (i in 1:length(files_ok))pheno = c(pheno, unlist(strsplit(files_ok[i],"_"))[4]); print(pheno)
@@ -65,22 +65,10 @@ for (exclusivity_pruning in c(TRUE,FALSE)) {
                 if (exclusivity_pruning==TRUE) {
                         
                         # for pregnancy-related genes
-                        if (phe=="ENDOMETRIUM") regexp_not="myometr|([[:punct:]]|\\s)+cervi|([[:punct:]]|\\s)+uter[uaoi]+"
-                        if (phe=="MYOMETRIUM") regexp_not="endometr|([[:punct:]]|\\s)+cervi|([[:punct:]]|\\s)+uter[uaoi]+"
-                        if (phe=="UTERUS") regexp_not="endometr|myometr|([[:punct:]]|\\s)+cervi"
-                        if (phe=="CERVIX") regexp_not="endometr|myometr|([[:punct:]]|\\s)+uter[uaoi]+"
-                        if (phe=="PLACENTA") regexp_not="endometr|myometr|([[:punct:]]|\\s)+cervi|([[:punct:]]|\\s)+uter[uaoi]+"
-                        
-                        # for a control set of genes
-                        if (phe=="BLADDER")     regexp_not="([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|penile|prostat|intestin|([[:punct:]]|\\s)+liver|([[:punct:]]|\\s)+hepat|([[:punct:]]|\\s)+lung|pulmonary|muscle|([[:punct:]]|\\s)+skin |([[:punct:]]|\\s)+derma"
-                        if (phe=="BONE")        regexp_not="bladder|penile|prostat|intestin|([[:punct:]]|\\s)+liver|([[:punct:]]|\\s)+hepat|([[:punct:]]|\\s)+lung|pulmonary|muscle|([[:punct:]]|\\s)+skin |([[:punct:]]|\\s)+derma"
-                        if (phe=="PENILE")      regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|prostat|intestin|([[:punct:]]|\\s)+liver|([[:punct:]]|\\s)+hepat|([[:punct:]]|\\s)+lung|pulmonary|muscle|([[:punct:]]|\\s)+skin |([[:punct:]]|\\s)+derma"
-                        if (phe=="PROSTATE")    regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|penile|intestin|([[:punct:]]|\\s)+liver|([[:punct:]]|\\s)+hepat|([[:punct:]]|\\s)+lung|pulmonary|muscle|([[:punct:]]|\\s)+skin |([[:punct:]]|\\s)+derma"
-                        if (phe=="INTESTINE")   regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|penile|prostat|([[:punct:]]|\\s)+liver|([[:punct:]]|\\s)+hepat|([[:punct:]]|\\s)+lung|pulmonary|muscle|([[:punct:]]|\\s)+skin |([[:punct:]]|\\s)+derma"
-                        if (phe=="LIVER")       regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|penile|prostat|intestin|([[:punct:]]|\\s)+lung|pulmonary|muscle|([[:punct:]]|\\s)+skin |([[:punct:]]|\\s)+derma"
-                        if (phe=="LUNGS")       regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|penile|prostat|intestin|([[:punct:]]|\\s)+liver|([[:punct:]]|\\s)+hepat|muscle|([[:punct:]]|\\s)+skin |([[:punct:]]|\\s)+derma"
-                        if (phe=="MUSCLE")      regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|penile|prostat|intestin|([[:punct:]]|\\s)+liver|([[:punct:]]|\\s)+hepat|([[:punct:]]|\\s)+lung|pulmonary|([[:punct:]]|\\s)+skin |([[:punct:]]|\\s)+derma"
-                        if (phe=="SKIN")        regexp_not="bladder|([[:punct:]]|\\s)+oste[oa]|([[:punct:]]|\\s)+bone|penile|prostat|intestin|([[:punct:]]|\\s)+liver|([[:punct:]]|\\s)+hepat|([[:punct:]]|\\s)+lung|pulmonary|muscle"
+                        if (phe=="AMNION") regexp_not="chorion|fetus|fetal|embryo|placent"
+                        if (phe=="CHORION") regexp_not="amnion|fetus|fetal|embryo|placent"
+                        if (phe=="FETUS-EMBRYO") regexp_not="amnion|chorion|placent"
+                        if (phe=="PLACENTA") regexp_not="amnion|chorion|fetus|fetal|embryo"
                         
                         print(regexp_not)
                         
@@ -188,13 +176,13 @@ cleaned_abstracts_exclusivityON[["stats"]] = stats_excl_ON
 cleaned_abstracts_exclusivityOFF[["stats"]] = stats_excl_OFF
 
 #  save what was generated (cleaned)
-out_dir="./PubMed_PRUNE/" #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY
+out_dir="./PubMed_PRUNE/" #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Aug_FETAL
 save(list=c("cleaned_abstracts_exclusivityON","cleaned_abstracts_exclusivityOFF"),
-     file=paste(out_dir,"cleaned_abstracts_GYNECOLOGY.RData",sep=""))
+     file=paste(out_dir,"cleaned_abstracts_FETAL.RData",sep=""))
 
 rm(list=ls())
 
 # load what was generated (cleaned)
-#out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY/PubMed_PRUNE/"
-#load(paste(out_dir,"cleaned_abstracts_GYNECOLOGY.RData",sep=""))
+out_dir="~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Aug_FETAL/PubMed_PRUNE/"
+load(paste(out_dir,"cleaned_abstracts_FETAL.RData",sep=""))
 
