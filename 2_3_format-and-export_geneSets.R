@@ -1,32 +1,24 @@
 #!/usr/bin/Rscript
 
-########################################################################
-########################################################################
-######################### export the gene sets
+## This script reformats and exports the gene sets, also filtering by the min number of mentions
 
-rm(list=ls())  # cleanup
+## USAGE: ./2_3_format-and-export_geneSets.R working_dir/, minimum_mentions
 
-load("./PubMed_GENES/PubMed_extracted_genes.RData") #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY
+options(stringsAsFactors = F)
+args=commandArgs(TRUE)
+working_dir=args[1]
+min_mentions=args[2] ## genes with lower number of mentions will not be included
 
-types = names(gene_lists)
+gene_dir = paste(working_dir,"PubMed_GENES/",sep="")
+file_list = list.files(gene_dir)
+file_list = file_list[grep(".txt$",file_list)]
 
-collector = NULL
-for (type in types) {  # for each type of settings
+########## simple version
 
-        gene.freq = gene_lists[[type]]
-        temp1 = data.frame(ENTREZ = gene.freq[gene.freq$freq>=1,"ENTREZ"],
-                                   GENESET=paste("PM",":",type,"_1",sep=""),Descript = ".")
-        temp2 = data.frame(ENTREZ = gene.freq[gene.freq$freq>=2,"ENTREZ"],
-                                   GENESET=paste("PM",":",type,"_2",sep=""),Descript = ".")
-                collector=rbind(collector,temp1,temp2); rm(gene.freq,temp1,temp2)
+for(file_name in file_list){
+    print(paste("working on file",file_name))
+    gene.freq=read.table(paste(gene_dir,file_name,sep=""),h=F)
+    out_name = paste(gene_dir,unlist(strsplit(file_name,"\\."))[1],".set",sep="")
+    temp1 = data.frame(ENTREZ = gene.freq[gene.freq$V2>=min_mentions,6], GENESET="NASAL_POLYP")
+    write.table(temp1,out_name,quote = F,row.names = F,col.names = F)
 }
-dim(collector)
-head(collector)
-
-        folder = "./PubMed_GENES/" #~/Biostuff/MOBA_GESTAGE_GWAS/PREGNANCY_GENES/PubMed_2015Jun_GYNECOLOGY
-        colnames(collector)[1]=paste("##",colnames(collector)[1],sep="")
-        file_name = paste(folder,"PubMed_geneSets_forINRICH_GYNECOLOGYandCONTROL.txt",sep="")
-        write.table(collector,file_name,row.names=F,col.names=T,sep="\t",quote=F)
-        rm(file_name,folder)
-
-

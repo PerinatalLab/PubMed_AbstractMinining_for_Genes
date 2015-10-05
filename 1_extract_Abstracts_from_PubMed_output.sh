@@ -3,21 +3,25 @@
 # this script is controlled by a master-script written in R
 # written by Julius
 
+### USAGE:
+# ./1_extract_Abstracts_from_PubMed_output.sh abstract_file, output_prefix, working_directory
+
 in_file_name=$1
 out_file_prfx=$2
+data_dir=$3
 
-# this directory is on WS2 computer (due to gawk)
-data_dir="./"
+mkdir ${data_dir}PubMed_DIGEST/
 
-PubMed_results=${data_dir}/PubMed_RAW/${in_file_name} # downloaded from PubMed
-PubMed_edited=${data_dir}/PubMed_DIGEST/temporary_file.txt
+PubMed_results=${data_dir}PubMed_RAW/${in_file_name} # downloaded from PubMed
+PubMed_edited=${data_dir}PubMed_DIGEST/temporary_file.txt
 PubMed_digest_abstracts=${data_dir}PubMed_DIGEST/${out_file_prfx}_abstracts.txt
 PubMed_digest_titles=${data_dir}PubMed_DIGEST/${out_file_prfx}_titles.txt
 
-
+## reformat the raw files
 echo "editing references in the file..."
 gawk 'BEGIN{RS="\n\n+"} {gsub("\n"," "); print $0}' ${PubMed_results} > ${PubMed_edited}
 
+## detect actual text of abstract and remove everything else
 echo "writing out abstracts..."
 gawk 'BEGIN{OFS="\t"; i=1} $1==i"."{pr=NR+3} NR==pr-1 && $0~/^\[Art/{pr++;next} \
 NR==pr && $0~/^Author information/{pr++} NR==pr && $0~/^Collaborator/{pr++} \
